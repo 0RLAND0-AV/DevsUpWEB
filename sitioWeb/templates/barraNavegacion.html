@@ -1,0 +1,56 @@
+{% load static %}
+<nav class="navbar">
+    <div class="logo">
+        <a href="{% url 'base' %}">
+            <img src="{% static 'LogoIS_Oficial.png' %}" alt="Logo" class="logo-img">
+        </a>
+    </div>
+    <div class="search-bar">        
+        {% if not is_profile_page %}
+            <input class="inputBuscar" id="inputBuscar" type="text" placeholder="Buscar productos...">
+            <button onclick="buscarProducto()"><i class="fas fa-search"></i></button>
+        {% endif %}
+        <p id="noResultMessage" style="display: none; color: red;">No se encontró ningún producto con ese nombre.</p>
+    </div>
+
+    <div class="nav-links" id="navLinks">
+        <a href="{% url 'base' %}" class="nav-link">Inicio</a> <!-- Asegúrate de tener la URL configurada -->
+         <!-- Botón del carrito -->
+         <button class="nav-link" onclick="toggleCart()">
+            Carrito <span class="cart-count" id="cartCount">0</span>
+        </button>
+        <!-- Ventana emergente del carrito -->
+        <div class="cart-popup" id="cartPopup">
+            <h3>Carrito de Compras</h3>
+            <ul class="cart-items" id="cartItems">
+                <!-- Aquí se cargarán los productos -->
+                <li class="cart-item">
+                    <button class="remove-btn">Eliminar</button>
+                </li>
+            </ul>
+            <p class="cart-total">Total: <span id="cartTotal">350.00 bs</span></p>
+        </div>
+
+                <!--<a href=# class="nav-link">Iniciar Sesion</a>-->
+                {% if request.session.user_id %}
+                <a href="{% url 'perfil' %}" class="nav-link">
+                    {% if user.foto %}
+                        <img src="{{ user.foto.url }}" alt="Foto de perfil" class="profile-img">
+                    {% else %}
+                        <img src="{% static 'default-profile.png' %}" alt="Foto de perfil" class="profile-img">
+                    {% endif %}
+                    {{ user.nombre }}
+                </a>
+                {% else %}
+                    <a href="#" class="nav-link" id="loginBtn">
+                        <img src="{% static 'default-profile.png' %}" alt="Perfil" class="profile-img">
+                        Iniciar Sesión
+                    </a>
+                {% endif %}
+    </div>
+    <div class="hamburger" id="hamburger">
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
+</nav>
