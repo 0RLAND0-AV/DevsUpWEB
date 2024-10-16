@@ -3,12 +3,13 @@ const validarArchivos = () => {
     const archivoInput = document.getElementById('archivo');
     const fileNameDisplay = document.getElementById('file-name');
     const previewContainer = document.getElementById('preview-container');
-    
+
     if (!archivoInput) return false;
 
     const fileList = Array.from(archivoInput.files);
     const validTypes = ['image/jpeg', 'image/png', 'image/jpg'];
     const maxFileSize = 2 * 1024 * 1024; // 2 MB en bytes
+    const maxFiles = 8; // Máximo de archivos permitidos
     const validFiles = [];
     const removedFiles = [];
 
@@ -21,30 +22,37 @@ const validarArchivos = () => {
         const isValidSize = file.size <= maxFileSize;
 
         if (!isValidType || !isValidSize) {
-            removedFiles.push(file.name);
+            removedFiles.push(file.name); // Archivo no válido
         } else {
-            validFiles.push(file);
+            // Solo agregar hasta un máximo de archivos válidos
+            if (validFiles.length < maxFiles) {
+                validFiles.push(file);
 
-            // Crear una miniatura para cada imagen válida
-            const reader = new FileReader();
-            reader.onload = function (e) {
-                const img = document.createElement('img');
-                img.src = e.target.result;
-                previewContainer.appendChild(img); // Añadir la miniatura al contenedor
-            };
-            reader.readAsDataURL(file); // Leer el archivo como DataURL para mostrar la imagen
+                // Crear una miniatura para cada imagen válida
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    previewContainer.appendChild(img); // Añadir la miniatura al contenedor
+                };
+                reader.readAsDataURL(file); // Leer el archivo como DataURL para mostrar la imagen
+            } else {
+                // Si se alcanza el máximo, añadir a la lista de eliminados
+                removedFiles.push(file.name);
+            }
         }
     });
-    
+
     // Mostrar alerta personalizada si hay archivos eliminados
     if (removedFiles.length > 0) {
         Swal.fire({
             icon: 'error',
             title: 'Archivos eliminados',
-            text: `Los siguientes archivos fueron eliminados porque no cumplen las especificaciones: ${removedFiles.join(', ')}`,
-            footer: '<label> Archivos validos[.jpg, .jpeg] que no pesen mas de 2mb</>' // Puedes personalizar el footer o quitarlo
+            text: `Los siguientes archivos fueron eliminados porque se excedió el límite de ${maxFiles} archivos válidos: ${removedFiles.join(', ')}`,
+            footer: '<label>Solo se aceptan 8 archivos en formato [.jpg, .jpeg, .png] de peso máximo 2MB</label>'
         });
     }
+
     // Mostrar nombres de archivos seleccionados en el elemento <span>
     if (validFiles.length > 0) {
         fileNameDisplay.textContent = `Archivos seleccionados: ${validFiles.map(file => file.name).join(', ')}`;
@@ -57,26 +65,30 @@ const validarArchivos = () => {
 
 
 
-
 // Habilitar o deshabilitar el botón de ofertar
 const actualizarEstadoBotonOfertar = () => {
     const buttonOfertar = document.getElementById('button-ofertar');
+    const archivoInput = document.getElementById('archivo'); // Obtener el input de archivos
     const provincia = document.getElementById('provincia').value;
     const urlMapa = document.getElementById('urlMapa').value;
     const material = document.getElementById('material').value;
-    const precio = document.getElementById('precio').value;
+    const precio = parseFloat(document.getElementById('precio').value); // Asegúrate de convertir el valor a un número
     const descripcion = document.getElementById('descripcion').value; // Nueva validación
     const departamento = document.getElementById('departamento').value; // Nueva validación
     const terminos = document.getElementById('terminos').checked;
 
-    const camposCompletos = provincia && urlMapa && material && precio > 0 && descripcion && departamento && terminos;
+    // Verificar si hay archivos seleccionados
+    const hayArchivosSeleccionados = archivoInput.files.length > 0;
+
+    // Verifica que todos los campos estén llenos, que el precio sea mayor a 0 y que haya archivos seleccionados
+    const camposCompletos = provincia && urlMapa && material && precio > 0 && descripcion && departamento && terminos && hayArchivosSeleccionados;
 
     if (camposCompletos) {
         buttonOfertar.disabled = false;
-        buttonOfertar.style.backgroundColor = '#014040'; // Verde oscuro
+        buttonOfertar.style.backgroundColor = '#02735E'; // Verde oscuro
     } else {
         buttonOfertar.disabled = true;
-        buttonOfertar.style.backgroundColor = '#4c9c8d'; // Verde claro (cuando está deshabilitado)
+        buttonOfertar.style.backgroundColor = '#666666'; // Color gris oscuro (cuando está deshabilitado)
     }
 };
 
@@ -106,7 +118,7 @@ const inicializarEventos = () => {
         text: "¡Los datos ingresados NO se guardaran!",
         icon: "warning",
         showCancelButton: true,
-        confirmButtonColor: "#014040",
+        confirmButtonColor: "#666666",
         cancelButtonColor: "#d33",
         confirmButtonText: "Sí",
         cancelButtonText: "Cancelar"
@@ -123,10 +135,10 @@ const inicializarEventos = () => {
         }
         });
     });       
-
+ 
     // Asociar la validación de archivos al cambio del input de archivos
     document.getElementById('archivo').addEventListener('change', validarArchivos);
-
+    document.getElementById('archivo').addEventListener('change', actualizarEstadoBotonOfertar);
     // Asociar la validación completa del formulario al submit
     document.getElementById('ofertaForm').addEventListener('submit', validarFormulario);
 
