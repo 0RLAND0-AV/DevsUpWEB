@@ -1,0 +1,189 @@
+
+/* Estilos generales de categorías */
+.categorias {
+    position: fixed;
+    left: 0;
+    width: 20%;
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 10px;
+    border-radius: 10px;
+    background-color: var(--primary-dark);
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    color: var(--white);
+}
+
+/* Encabezado de Categorías */
+.categorias h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: var(--secondary-color);
+}
+
+/* Lista de categorías y subcategorías */
+.category-list,
+.subcategory-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    color:var(--white);
+}
+
+/* Categorías principales */
+.category {
+    margin-bottom: 5px;
+    border-radius: 8px;
+    overflow: hidden; /* Evita que se desborde contenido */
+    background-color: var(--primary-color);
+    color: var(--white);
+}
+
+/* Botón de Categoría */
+.category-btn {
+    width: 100%;
+    text-align: left;
+    background-color: var(--primary-color); /* Color original */
+    border: none;
+    padding: 15px;
+    font-size: 18px;
+    cursor: pointer;
+    color: var(--text-color);
+    transition: background-color 0.3s ease, transform 0.2s; /* Transición suave del color */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: white;
+}
+
+.category-btn:hover {
+    background-color: var(--secondary-color);
+    transform: scale(1.02); /* Efecto ligero de zoom */
+    color:var(--white);
+}
+
+/* Cambiar el color cuando esté activa */
+.category-btn.active {
+    background-color: var(--tertiary-color); /* Cambia al color #ff4500 temporalmente */
+}
+
+/* Icono indicador (flecha) */
+.category-btn::after {
+    content: '▼'; /* Flecha hacia abajo */
+    font-size: 14px;
+    transition: transform 0.3s;
+}
+
+/* Rotar la flecha cuando esté abierta */
+.category-btn.active::after {
+    transform: rotate(-180deg);
+}
+
+/* Subcategorías */
+.subcategory-list {
+    display: none;
+    padding: 10px 20px;
+    background-color: var(--primary-color);
+    border-left: 4px solid var(--primary-color);
+    animation: fadeIn 0.3s ease-in-out; /* Animación suave */
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* Cada subcategoría */
+.subcategory {
+    padding: 0px 0;
+    transition: background-color 0.3s;
+}
+
+/* Botón de Subcategoría */
+.subcategory-btn {
+    width: 100%;
+    background: transparent;
+    border: none;
+    text-align: left;
+    color: var(--white);
+    cursor: pointer;
+    padding: 10px; /* Ajuste de padding para asegurar que cubra todo */
+    box-sizing: border-box; /* Asegura que padding no desborde */
+    border-radius: 10px;
+}
+
+/* Efecto hover de la subcategoría */
+.subcategory:hover {
+    background-color: var(--secondary-color);
+    color: var(--white);
+    border-radius: 10px;
+}
+
+/* Estado activo de subcategoría */
+.subcategory-btn.active {
+    background-color: var(--tertiary-color);
+    width: 100%;
+    padding: 8px ;
+    margin: 0;
+    box-sizing: border-box;
+    color: var(--white);
+    border-radius: 10px;
+}
+@media (max-width: 900px) {
+    .categorias{
+        display: inline-block;
+        position: fixed;
+        top: 25%;
+    }
+}
+
+/* Estilos responsivos para dispositivos móviles */
+@media (max-width: 768px) {
+    .categorias {
+        display: inline-block;
+        position: static; /* Cambiar a estático para que esté en flujo */
+        position: fixed;
+        top: 15%;
+        width: 100%; /* Ocupar todo el ancho */
+        max-width: none; /* Sin restricción de ancho máximo */
+        padding: 10px; /* Ajustar el padding */
+        box-shadow: none; /* Eliminar sombra */
+        border-radius: 0; /* Sin bordes redondeados */
+        display: flex; /* Usar flex para alinear en fila */
+        flex-direction: row; /* Alinear las categorías en fila */
+        overflow-x: auto; /* Permitir desplazamiento horizontal si es necesario */
+        z-index: 999;
+        overflow: auto; /* Permite el desplazamiento */
+        scrollbar-width: none; /* Para navegadores basados en Firefox */
+    }
+    .categorias h2 {
+        font-size: 0px; 
+        visibility: none;
+    }
+
+    .category-list {
+        display: flex; /* Mantener las categorías en fila */
+        flex-wrap: nowrap; /* No permitir que las categorías se ajusten a la siguiente línea */
+    }
+
+    .category {
+        flex: 1 0 auto; /* Permitir que cada categoría ocupe espacio en la fila */
+        min-width: 100px; /* Establecer un ancho mínimo para las categorías */
+    }
+
+    .category-btn {
+        font-size: 16px; /* Reducir tamaño de fuente para móviles */
+        padding: 10px; /* Ajustar padding para que no ocupe demasiado espacio */
+    }
+
+    /* Mostrar subcategorías al hacer clic */
+    .category-btn.active + .subcategory-list {
+        display: block; /* Mostrar subcategorías si la categoría está activa */
+    }
+}
+@media (max-width: 450px) {
+    .categorias{
+        position: fixed;
+        font-size: 16px;
+        top: 11%;
+    }
+}
