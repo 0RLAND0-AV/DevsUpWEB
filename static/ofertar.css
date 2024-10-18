@@ -1,7 +1,7 @@
 .container2 {
     position: relative;
-    /*flex: 2;*/
-    /*width: max-content;*/
+    max-width: 800px; /* Establecer un ancho máximo */
+    width: 95%;
     margin: auto;
     background-color: #ffffff;
     padding: 25px;
@@ -83,18 +83,20 @@ input[type="file"] {
 
 .preview-container {
     display: flex;
-    flex-wrap: wrap;
+    flex-wrap: nowrap; /* Cambiar a nowrap para evitar que se deformen */
     margin-top: 10px;
+    max-width: 100%; /* Limitar el ancho del contenedor de vista previa */
+    overflow-x: auto; /* Permitir desplazamiento horizontal si hay muchos archivos */
 }
-
 .preview-container img {
-    width: 100px;
-    height: 100px;
-    object-fit: cover;
+    max-width: 100px; /* Limitar el ancho máximo de las imágenes */
+    height: auto; /* Mantener la proporción de la imagen */
+    object-fit: cover; /* Mantener la proporción de la imagen */
     margin-right: 10px;
     border: 1px solid #ddd;
     padding: 5px;
 }
+
 
 
 .file-input {
@@ -130,8 +132,17 @@ input[type="file"] {
 }
 
 .btn-primary {
-    background-color: #666;
+    background-color: #02735E; /* Color cuando está deshabilitado */
 }
+
+.btn-primary:disabled {
+    background-color: #666666; /* Mantenemos el mismo color */
+    opacity: 0.5; /* Opacidad al 50% para indicar que está deshabilitado */
+    pointer-events: none; /* Desactivar cualquier interacción con el botón */
+}
+
+
+
 
 .btn-secondary {
     background-color: #c02323;
@@ -142,6 +153,7 @@ input[type="file"] {
 }
 
 @media (max-width: 600px) {
+    
     .form-group.inline {
         display: block; /* Usar flexbox para alinear elementos en línea */
         gap: 20px; /* Espacio entre los elementos */

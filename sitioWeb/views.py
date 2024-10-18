@@ -9,6 +9,8 @@ from django.core.exceptions import ValidationError
 from django.views.decorators.http import require_POST
 from django.views.decorators.csrf import csrf_exempt
 import json
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth import get_user_model
 
 # Create your views here.
 def baseView(request):
@@ -20,7 +22,8 @@ def baseView(request):
         user = Usuario.objects.get(idUsuario=user_id)
     productos = Producto.objects.all() 
     categorias = Categoria.objects.prefetch_related('subcategorias').all()  # Obtiene todas las categorías y sus subcategorías   
-    return render(request, "base.html",{'user': user, 'productos': productos, 'categorias': categorias})
+    carritos = CarritoProducto.objects.filter(usuario=user)
+    return render(request, "base.html",{'user': user, 'productos': productos, 'categorias': categorias,'carritos': carritos})
 
 def login_view(request):
     if request.method == 'POST':
@@ -78,6 +81,7 @@ def perfil_view(request):
         return redirect('login')  # Redirigir al login si no está autenticado
     
     user = Usuario.objects.get(idUsuario=user_id)
+    carritos = CarritoProducto.objects.filter(usuario=user)
 
     if request.method == 'POST':
         # Si hay un archivo de imagen en la solicitud
@@ -98,46 +102,78 @@ def perfil_view(request):
             
         user.save()  # Guarda los cambios en la base de datos
 
-    return render(request, 'perfil.html', {'user': user,'is_profile_page': True})
+    return render(request, 'perfil.html', {'user': user,'is_profile_page': True,'carritos': carritos})
 
 def logout_request(request):
     logout(request)
     messages.info(request, "Saliste exitosamente")
     return redirect("base")
+#para eliminar
+#@login_required
+def eliminar_del_carrito(request, producto_id):
+    if request.method == "DELETE":
+        try:
+            #obtenemos al usuario primero
+            user_id = request.session.get('user_id')
+            user = Usuario.objects.get(idUsuario=user_id)
+            #obtenemos al carrito que quiere eliminar si hay un error nos mostrara la pagina 404
+            carrito_item = get_object_or_404(CarritoProducto, usuario=user, producto__id=producto_id)
+            carrito_item.delete()
+            mensaje = f"El producto ha sido eliminado del carrito."
 
-# Solo temporal, asegúrate de corregir la gestión del token CSRF.
+            # Recuperar todos los productos en el carrito
+            productos_en_carrito = CarritoProducto.objects.filter(usuario=user)
+            lista_productos = [{'id': item.producto.id, 'nombre': item.producto.nombre, 'precio': int(item.producto.precio)} for item in productos_en_carrito]
+
+            return JsonResponse({
+                'mensaje': mensaje,
+                'success': True,
+                'productos': lista_productos  # Enviar la lista de productos en el carrito
+            })
+        except Exception as e:
+            return JsonResponse({'mensaje': 'Error al eliminar el producto.', 'success': False}, status=500)
+
+    return JsonResponse({'mensaje': 'Método no permitido.', 'success': False}, status=405)
+
+
 @require_POST
-def agregar_al_carrito(request):
-    try:
-        # Obtener los datos del cuerpo de la solicitud
-        data = json.loads(request.body)
-        producto_id = data.get('producto_id')
+def agregar_al_carrito(request, producto_id):
+    print(f"Solicitud recibida: {request.method} para producto ID: {producto_id}")
 
-        # Obtener el usuario en sesión
-        user_id = request.session.get('user_id')
-        if not user_id:
-            return JsonResponse({'success': False, 'message': 'Producto agregado al carrito'}, status=401)
+    if request.method == "POST":
+        try:
+            producto = get_object_or_404(Producto, id=producto_id)
+            print(f"Producto encontrado: {producto.nombre}")
+            user_id = request.session.get('user_id')
+            user = Usuario.objects.get(idUsuario=user_id)
+            print(f"Producto encontrado: {user.nombre}")
 
-        user = Usuario.objects.get(idUsuario=user_id)
-        producto = get_object_or_404(Producto, id=producto_id)
+            carrito_producto, created = CarritoProducto.objects.get_or_create(usuario=user, producto=producto)
+            print(f"Item del carrito {'creado' if created else 'ya existente'}: {carrito_producto}")
 
-        # Agregar producto al carrito
-        carrito_producto, created = CarritoProducto.objects.get_or_create(usuario=user, producto=producto)
+            if created:
+                mensaje = f"El producto '{producto.nombre}' se agregó al carrito."
+            else:
+                mensaje = f"El producto '{producto.nombre}' ya está en tu carrito."
 
-        if created:
-            message = 'Producto agregado al carrito'
-        else:
-            message = 'El producto ya está en el carrito'
+            # Recuperar todos los productos en el carrito
+            productos_en_carrito = CarritoProducto.objects.filter(usuario=user)
+            lista_productos = [{'id': item.producto.id, 'nombre': item.producto.nombre, 'precio': int(item.producto.precio)} for item in productos_en_carrito]
 
-        return JsonResponse({'success': True, 'message': message})
+            print(f"Mensaje enviado: {mensaje}")
+            return JsonResponse({
+                'mensaje': mensaje,
+                'success': True,
+                'productos': lista_productos  # Enviar la lista de productos en el carrito
+            })
 
-    except json.JSONDecodeError:
-        return JsonResponse({'success': False, 'message': 'Datos inválidos'}, status=400)
-    except Producto.DoesNotExist:
-        return JsonResponse({'success': False, 'message': 'Producto no encontrado'}, status=404)
-    except Usuario.DoesNotExist:
-        return JsonResponse({'success': False, 'message': 'Usuario no encontrado'}, status=404)
-    
+        except Exception as e:
+            print(f"Error al agregar al carrito: {e}")
+            return JsonResponse({'mensaje': 'Error interno del servidor.', 'success': False}, status=500)
+
+    print("Método no permitido.")
+    return JsonResponse({'mensaje': 'Método no permitido.', 'success': False}, status=405)
+  
 # Vista para obtener provincias según el departamento seleccionado
 def cargar_provincias_por_departamento(request):
     departamento_id = request.GET.get('departamento_id')
@@ -152,7 +188,7 @@ from django.shortcuts import get_object_or_404
 def ofertarMView(request):
     # Obtener el usuario desde la sesión
     user_id = request.session.get('user_id')
-
+    carritos = CarritoProducto.objects.filter(usuario=user_id)
     # Si no hay usuario en sesión, redirigir al login
     if not user_id:
         return redirect('login')
@@ -201,4 +237,5 @@ def ofertarMView(request):
         return redirect('base')
 
     # Si la solicitud es GET, renderizar el formulario con el usuario
-    return render(request, 'ofertar.html', {'user': user,'is_profile_page': True})
+    return render(request, 'ofertar.html', {'user': user,'is_profile_page': True,'carritos': carritos})
+

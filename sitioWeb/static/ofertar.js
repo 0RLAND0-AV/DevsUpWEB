@@ -164,6 +164,3 @@ const inicializarEventos = () => {
 
 // Inicializar eventos cuando el DOM esté cargado
 document.addEventListener('DOMContentLoaded', inicializarEventos);
-
-
-

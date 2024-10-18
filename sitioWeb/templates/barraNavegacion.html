@@ -10,26 +10,29 @@
             <input class="inputBuscar" id="inputBuscar" type="text" placeholder="Buscar productos...">
             <button onclick="buscarProducto()"><i class="fas fa-search"></i></button>
         {% endif %}
-        <p id="noResultMessage" style="display: none; color: red;">No se encontró ningún producto con ese nombre.</p>
+        <!--<p id="noResultMessage" style="display: none; color: red;">No se encontró ningún producto con ese nombre.</p>-->
     </div>
 
     <div class="nav-links" id="navLinks">
         <a href="{% url 'base' %}" class="nav-link">Inicio</a> <!-- Asegúrate de tener la URL configurada -->
          <!-- Botón del carrito -->
-         <button class="nav-link" onclick="toggleCart()">
-            Carrito <span class="cart-count" id="cartCount">0</span>
-        </button>
-        <!-- Ventana emergente del carrito -->
-        <div class="cart-popup" id="cartPopup">
-            <h3>Carrito de Compras</h3>
-            <ul class="cart-items" id="cartItems">
-                <!-- Aquí se cargarán los productos -->
-                <li class="cart-item">
-                    <button class="remove-btn">Eliminar</button>
-                </li>
-            </ul>
-            <p class="cart-total">Total: <span id="cartTotal">350.00 bs</span></p>
-        </div>
+         <div class="dropdown">
+            <button class="dropbtn">Carrito</button>
+            <div class="cart-popup" id="cart-popup">
+                <h3>Carrito de Compras</h3>
+                {% if carritos %}
+                    {% for item in carritos %}
+                    <div class="cart-item" id="cartItems" data-precio="{{ item.producto.precio }}">
+                        <span>{{ item.producto.nombre }} - {{ item.producto.precio|floatformat:2 }} bs </span>
+                        <button class="remove-from-cart" data-id="{{ item.producto.id }}">Eliminar</button>
+                    </div>
+                    {% endfor %}
+                    <p class="cart-total">Total: <strong id="cart-total">0.00</strong> bs</p>
+                {% else %}
+                    <p>No hay productos en el carrito.</p>
+                {% endif %}
+            </div>
+        </div>        
 
                 <!--<a href=# class="nav-link">Iniciar Sesion</a>-->
                 {% if request.session.user_id %}

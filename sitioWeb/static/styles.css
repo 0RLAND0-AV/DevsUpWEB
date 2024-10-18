@@ -21,7 +21,7 @@ body {
     color: var(--text-color);
     background-color: var(--background-color);
 
-    padding-bottom: 10em;
+    padding-bottom: 3em;
     position: relative;
     min-height: 100vh;
     overflow-x: hidden;
@@ -53,6 +53,6 @@ footer {
     main {
         padding-top: 100px;
         flex-direction: column;
-        margin-top: 120px;
+        margin-top: 120px; 
     }
 }

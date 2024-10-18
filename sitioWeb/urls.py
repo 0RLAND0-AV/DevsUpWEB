@@ -11,6 +11,7 @@ from .views import(
     ofertarMView ,
     agregar_al_carrito,
     cargar_provincias_por_departamento,
+    eliminar_del_carrito
 ) # Asegúrate de importar tu vista
 from django.contrib.auth import views as auth_views
 
@@ -22,7 +23,8 @@ urlpatterns = [
     path('logout/',logout_request, name='logout'),#logout --es salirce o cerrar sesion
     path('ofertar/',ofertarMView,name = 'ofertar'),
     path('get_provincias/', cargar_provincias_por_departamento, name='get_provincias'),
-    path('agregar_al_carrito/', agregar_al_carrito, name='agregar_al_carrito'),
+    path('agregar/<int:producto_id>/', agregar_al_carrito, name='agregar_al_carrito'),
+    path('eliminar/<int:producto_id>/', eliminar_del_carrito, name='eliminar_del_carrito'),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
