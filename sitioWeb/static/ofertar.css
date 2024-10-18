@@ -3,6 +3,7 @@
     max-width: 800px; /* Establecer un ancho máximo */
     width: 95%;
     margin: auto;
+    margin-bottom:0.8m;
     background-color: #ffffff;
     padding: 25px;
     border-radius: 5px;
@@ -116,7 +117,8 @@ input[type="file"] {
     cursor: pointer; /* Cambia el cursor al pasar sobre el checkbox */
 }
 
-.button-group {
+.button-group-ofertar {
+    margin-top: 5%;
     display: flex;
     justify-content: space-between;
 }
@@ -153,12 +155,14 @@ input[type="file"] {
 }
 
 @media (max-width: 600px) {
-    
+    .container2 {
+        margin-bottom:3em;    
+    }
     .form-group.inline {
         display: block; /* Usar flexbox para alinear elementos en línea */
         gap: 20px; /* Espacio entre los elementos */
     }
-    .button-group {
+    .button-group-ofertar{
         flex-direction: column;
     }
 

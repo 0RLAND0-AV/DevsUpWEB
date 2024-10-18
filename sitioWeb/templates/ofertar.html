@@ -13,7 +13,11 @@
         <!-- Campo para el título del producto -->
         <div class="form-group">
             <label for="titulo">Título del Producto:</label>
-            <input type="text" id="titulo" name="titulo" placeholder="Ingresa el título del producto" required>
+            
+            <input type="text"  name="titulo" id="titulo" placeholder="Ingresa el título del producto" required autocomplete="off"
+            maxlength="100"  onkeypress="return /^[a-zA-Z0-9]*$/.test(event.key)" />
+
+
         </div>
 
         <div class="form-group inline">
@@ -112,7 +116,7 @@
             <label for="terminos">Acepto las Condiciones del servicio y la Política de Privacidad</label>
         </div>
         
-        <div class="button-group">
+        <div class="button-group-ofertar">
             <button type="submit" class="btn btn-primary" id="button-ofertar" disabled>Ofertar</button>
             <button type="button" class="btn btn-secondary" id="button-cancelar">Cancelar</button>
         </div>
