@@ -13,9 +13,10 @@
         <!-- Campo para el título del producto -->
         <div class="form-group">
             <label for="titulo">Título del Producto:</label>
+            
+            <input type="text" name="titulo" id="titulo" placeholder="Ingresa el título del producto" required autocomplete="off"
+            maxlength="100" onkeypress="return /^[a-zA-Z0-9\s]*$/.test(event.key)" />
 
-            <input type="text"  name="titulo" id="titulo" placeholder="Ingresa el título del producto" required
-            maxlength="100" />
 
 
         </div>
@@ -39,19 +40,21 @@
                 <option value="" disabled selected>Seleccionar Provincia</option>
             </select>
         </div>
-
+        
         <div class="form-group">
             <label for="urlMapa">Dirección:</label>
-            <input type="text" id="urlMapa" name="urlMapa" placeholder="Añade tu direccion" required>
-        </div>
+            <input type="text" name="urlMapa" id="urlMapa" placeholder="Añade tu direccion" required autocomplete="off"
+            maxlength="100" onkeypress="return /^[a-zA-Z0-9\s/:?&.=]*$/.test(event.key)" />
 
+        </div>
+        
         <div class="form-group">
             <label for="material">Tipo de Material:</label>
             <select id="material" name="material" required>
                 <option value="" disabled selected>Seleccionar Categoría</option>
                 <optgroup label="Acero">
                     <option value="Laminas">Laminas</option>
-                    <option value="Varrilla">Varrilla</option>
+                    <option value="Barrilla">Barrilla</option>
                     <option value="Alambron">Alambrón</option>
                     <option value="Perfiles">Perfiles</option>
                 </optgroup>
@@ -76,25 +79,25 @@
                 </optgroup>
             </select>
         </div>
-
+        
         <div class="form-group inline">
             <div>
                 <label for="precio">Precio:</label>
                 <input type="text" maxlength="6" name="precio" id="precio" placeholder="Precio Total (Bs)" required autocomplete="off" onkeypress="return (event.charCode >= 48 && event.charCode <= 57)" min="1" />
             </div>
         </div>
-
+        
         <div class="custom-file-upload">
             <label for="archivo">Subir Archivo(s):</label>
             <input type="file" id="archivo" name="archivo" required accept=".png, .jpeg" multiple>
             <label for="archivo" class="custom-file-button">Seleccionar archivo(s)</label>
             <span id="file-name">No se ha seleccionado archivo</span>
         </div>
-
+        
         <div id="preview-container" class="preview-container">
             <!-- Aquí se mostrarán las miniaturas -->
         </div>
-
+        
         <div>
             <label for="estado">Estado:</label>
             <select id="estado" name="estado" required>
@@ -105,17 +108,17 @@
                 <option value="con_detalles">Con detalles</option>
             </select>
         </div>
-
+        
         <div class="form-group">
             <label for="descripcion">Descripción:</label>
             <textarea id="descripcion" name="descripcion" required placeholder="Añade una pequeña descripción..." rows="2" maxlength="250"></textarea>
         </div>
-
+        
         <div class="checkbox-container">
             <input type="checkbox" id="terminos" name="terminos" />
             <label for="terminos">Acepto las Condiciones del servicio y la Política de Privacidad</label>
         </div>
-
+        
         <div class="button-group-ofertar">
             <button type="submit" class="btn btn-primary" id="button-ofertar" disabled>Ofertar</button>
             <button type="button" class="btn btn-secondary" id="button-cancelar">Cancelar</button>
