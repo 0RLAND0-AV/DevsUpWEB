@@ -7,23 +7,24 @@
 {% block contenidos %}
 <div class="container2">
     <h1>Ofertar Material</h1>
-    <form id="ofertaForm" method="post" enctype="multipart/form-data">
+    <form class="row g-3 needs-validation" novalidate id="ofertaForm" method="post" enctype="multipart/form-data">
         {% csrf_token %}
 
         <!-- Campo para el título del producto -->
         <div class="form-group">
-            <label for="titulo">Título del Producto:</label>
-
-            <input type="text" name="titulo" id="titulo" placeholder="Ingresa el título del producto" required autocomplete="off"
+            <label for="titulo">Título del Producto <span class="text-rojo">*</span></label>
+            <input class="form-control" type="text" name="titulo" id="titulo" placeholder="Ingresa el título del producto" required autocomplete="off"
             maxlength="100" onkeypress="return /^[a-zA-Z0-9\s]*$/.test(event.key)" />
-
-
-
+            <div class="invalid-feedback">
+                Completa este campo porfavor
+            </div>
         </div>
+        
+
 
         <div class="form-group inline">
-            <label for="departamento">Departamento:</label>
-            <select id="departamento" name="departamento" required>
+            <label for="departamento">Departamento <span class="text-rojo">*</span></label>
+            <select class="form-select" id="departamento" name="departamento" required>
                 <option value="" disabled selected>Seleccionar Departamento</option>
                 <option value="Chuquisaca" data-provincias='["Azurduy", "Belisario Boeto", "Hernando Siles", "Jaime Zudáñez", "Luis Calvo", "Nor Cinti", "Oropeza", "Sud Cinti", "Tomina", "Yamparáez"]'>Chuquisaca</option>
                 <option value="La Paz" data-provincias='["Abel Iturralde", "Aroma", "Bautista Saavedra", "Caranavi", "Eliodoro Camacho", "Franz Tamayo", "Gualberto Villarroel", "Ingavi", "Inquisivi", "José Manuel Pando", "Larecaja", "Loayza", "Los Andes", "Manco Kapac", "Muñecas", "Nor Yungas", "Omasuyos", "Pacajes", "Pedro Domingo Murillo", "Sud Yungas"]'>La Paz</option>
@@ -35,22 +36,26 @@
                 <option value="Beni" data-provincias='["Cercado", "Antonio Vaca Díez", "General José Ballivián", "Iténez", "Mamoré", "Marbán", "Moxos", "Yacuma"]'>Beni</option>
                 <option value="Pando" data-provincias='["Abuná", "Federico Román", "Madre de Dios", "Manuripi", "Nicolás Suárez"]'>Pando</option>
             </select>
-            <label for="provincia">Provincia:</label>
-            <select id="provincia" name="provincia" required>
+            
+            <label for="provincia">Provincia <span class="text-rojo">*</span></label>
+            <select class="form-select" id="provincia" name="provincia" required>
                 <option value="" disabled selected>Seleccionar Provincia</option>
             </select>
+            
         </div>
 
         <div class="form-group">
-            <label for="urlMapa">Dirección:</label>
-            <input type="text" name="urlMapa" id="urlMapa" placeholder="Añade tu direccion" required autocomplete="off"
+            <label for="urlMapa">Dirección <span class="text-rojo">*</span></label>
+            <input  class="form-control"  type="text" name="urlMapa" id="urlMapa" placeholder="Añade tu direccion" required autocomplete="off"
             maxlength="100" onkeypress="return /^[a-zA-Z0-9\s/:?&.=]*$/.test(event.key)" />
-
+            <div class="invalid-feedback">
+                Completa este campo porfavor
+            </div>
         </div>
 
         <div class="form-group">
-            <label for="material">Tipo de Material:</label>
-            <select id="material" name="material" required>
+            <label for="material">Tipo de Material <span class="text-rojo">*</span></label>
+            <select class="form-select" id="material" name="material" required>
                 <option value="" disabled selected>Seleccionar Categoría</option>
                 <optgroup label="Acero">
                     <option value="Laminas">Laminas</option>
@@ -78,49 +83,67 @@
                     <option value="Arena Fina">Arena Fina</option>
                 </optgroup>
             </select>
+            <div class="invalid-feedback">
+                Selecciona un categoria
+            </div>
         </div>
 
         <div class="form-group inline">
             <div>
-                <label for="precio">Precio:</label>
-                <input type="text" maxlength="6" name="precio" id="precio" placeholder="Precio Total (Bs)" required autocomplete="off" onkeypress="return (event.charCode >= 48 && event.charCode <= 57)" min="1" />
+                <label for="precio">Precio <span class="text-rojo">*</span></label>
+                <input class="form-control" type="text" maxlength="6" name="precio" id="precio" placeholder="Precio Total (Bs)" required autocomplete="off" onkeypress="return (event.charCode >= 48 && event.charCode <= 57)" min="1" />
+                <div class="invalid-feedback">
+                    Colocale un precio a tu producto
+                </div>
             </div>
+            
         </div>
 
         <div class="custom-file-upload">
-            <label for="archivo">Subir Archivo(s):</label>
-            <input type="file" id="archivo" name="archivo" required accept=".png, .jpeg" multiple>
+            <label for="archivo">Subir Archivo(s) <span class="text-rojo">*</span></label>
+            <input type="file" class="form-control" aria-label="file example" id="archivo" name="archivo" required accept=".png, .jpeg" multiple>
             <label for="archivo" class="custom-file-button">Seleccionar archivo(s)</label>
             <span id="file-name">No se ha seleccionado archivo</span>
         </div>
+        
+        
+
 
         <div id="preview-container" class="preview-container">
             <!-- Aquí se mostrarán las miniaturas -->
         </div>
 
         <div>
-            <label for="estado">Estado:</label>
-            <select id="estado" name="estado" required>
+            <label for="estado">Estado <span class="text-rojo">*</span></label>
+            <select class="form-select" id="estado" name="estado" required>
                 <option value="" disabled selected>Seleccionar Estado</option>
                 <option value="nuevo">Nuevo</option>
                 <option value="seminuevo">Seminuevo</option>
                 <option value="usado">Usado</option>
                 <option value="con_detalles">Con detalles</option>
             </select>
+            <div class="invalid-feedback">
+                Selecciona un estado
+            </div>
         </div>
 
         <div class="form-group">
-            <label for="descripcion">Descripción:</label>
-            <textarea id="descripcion" name="descripcion" required placeholder="Añade una pequeña descripción..." rows="2" maxlength="250"></textarea>
+            <label for="descripcion">Descripción <span class="text-rojo">*</span></label>
+            <textarea class="form-control" id="descripcion" name="descripcion" required placeholder="Añade una pequeña descripción..." rows="2" maxlength="250"></textarea>
+            <div class="invalid-feedback">
+                Añade una pequeña descripcion
+            </div>
         </div>
+
+        
 
         <div class="checkbox-container">
-            <input type="checkbox" id="terminos" name="terminos" />
-            <label for="terminos">Acepto las Condiciones del servicio y la Política de Privacidad</label>
-        </div>
+            <input type="checkbox" class="form-check-input" id="validationFormCheck1" required>
+            <label class="form-check-label" for="validationFormCheck1">Acepto las Condiciones del servicio y la Política de Privacidad</label>
+          </div>
 
         <div class="button-group-ofertar">
-            <button type="submit" class="btn btn-primary" id="button-ofertar" disabled>Ofertar</button>
+            <button type="submit" class="btn btn-primary" id="button-ofertar" >Ofertar</button>
             <button type="button" class="btn btn-secondary" id="button-cancelar">Cancelar</button>
         </div>
     </form>

@@ -31,7 +31,11 @@ label {
     margin-bottom: 5px;
     font-weight: bold;
 }
-
+/* Color de asterisco */
+.text-rojo {
+    color: red;
+    margin-left: 2px; /* Espacio entre el texto y el asterisco */
+}
 input[type="text"],
 input[type="number"],
 select,
@@ -42,7 +46,9 @@ textarea {
     border-radius: 4px;
     font-size: 16px;
 }
-
+#departamento, #provincia {
+    width: 15em ; /* O un valor como 50% o un tamaño fijo */
+}
 textarea {
     height: 100px;
     resize: vertical;
@@ -151,6 +157,7 @@ input[type="file"] {
 }
 
 .btn:hover {
+    background-color: #666666;
     opacity: 0.9;
 }
 
