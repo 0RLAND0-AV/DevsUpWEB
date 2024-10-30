@@ -12,6 +12,7 @@ class Usuario(models.Model):
     foto = models.ImageField(upload_to='fotos/', blank=True, null=True)  # Foto de perfil
     fecha_creacion = models.DateTimeField(auto_now_add=True)  # Fecha y hora de creación
     estadoUsuario = models.BooleanField(default=True)  # Estado del usuario (habilitado o no)
+    billetera = models.DecimalField(max_digits=10, decimal_places=2, default=0)  # Saldo de la billetera, por defecto 0
 
     class Meta:
         db_table = "Usuarios"

@@ -1,9 +1,9 @@
 .menu-perfil {
-    width: 15%;
+    width: 12%;
     background-color: var(--primary-color); /* Verde oscuro */
     padding-top: 10px;
     height: calc(100vh - 60px); /* Ajusta la altura para descontar el header */
-    box-sizing: border-box;
+    
     position: fixed; /* Fija el aside al lado izquierdo */
     top: 74px; /* Desplaza el aside hacia abajo, dejando espacio para el header */
     left: 0;
@@ -39,7 +39,6 @@
     color: #fff; /* Cambia el color del texto de los enlaces a blanco */
     text-decoration: none; /* Opcional: elimina el subrayado de los enlaces */
     display: block;
-    padding-left: 10px;
     width: 100%;
     box-sizing: border-box;
     
@@ -92,7 +91,7 @@
     flex-direction: row;
     justify-content:space-between;
     width: 100%; /* Asegúrate de que ocupe todo el ancho disponible */
-    padding: 0 0 0 4rem ; /* Añade padding si quieres dar espacio interno */
+    padding: 0 0 0 6rem ; /* Añade padding si quieres dar espacio interno */
     margin: 0; /* Ajusta márgenes si es necesario */
     
     
@@ -436,7 +435,7 @@ label {
 
     .menu-perfil {
         position: fixed; /* Fija el menú en la parte superior */
-        width: 15%;
+        width: 12%;
         height: calc(100vh - 60px); /* Altura completa, menos el header */
         
         left:0;
@@ -470,6 +469,7 @@ label {
         display: flex;
         flex-direction: column; 
         padding: 0;
+        margin-top: 120px;
         
     }
     
@@ -477,7 +477,9 @@ label {
         display: block;
         order: 1;
         width: 100%; /* Menú ocupa todo el ancho en móviles */
-        height: auto; /* Permitir que la altura crezca según el contenido */
+        height: 15%;
+        z-index: 1;
+        
         position: relative; /* Eliminar la posición fija */
         top: -43px;
         display: flex; /* Convertir en un menú superior */
@@ -520,7 +522,7 @@ label {
         display: flex;
         flex-direction: row;
         justify-content: space-between;
-        padding: 0;
+        padding-top: 20px ;
         margin-top: 1rem;
     }
 
@@ -557,14 +559,20 @@ label {
     }
 
     .menu-perfil {
-        
+        width: 10%;
+        height: 10%;
+        order:1;
         top: -43px;
     }
-
+    .lista-perfil li {
+        width: 50%; /* Margen reducido para enlaces */
+        padding: 0%;
+        margin-right: 0%;
+    }
     .menu-perfil img {
-        order:1;
+        
         width: 3rem;
-        height: 3rem;
+        height: 3.5rem;
     }
     .profile-config{
         order:2;
@@ -574,7 +582,6 @@ label {
         
         width: 100%; /* Asegúrate de que ocupe todo el ancho disponible */
         margin: 0; /* Ajusta márgenes si es necesario */
-        padding: 0 0 0 1rem; /* Ajustar padding en pantallas pequeñas */
     }
 
     /* Botones más pequeños */

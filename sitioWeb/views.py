@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import path
 from django.contrib import admin
 from .models import Usuario , Producto ,Categoria,CarritoProducto , Departamento,Provincia,subCategoria,EstadoDelProducto,Imagenes
-from django.http import HttpResponse ,JsonResponse
+from django.http import HttpResponse ,JsonResponse,HttpResponseRedirect
 from django.contrib.auth import authenticate, login ,logout , authenticate
 from django.contrib import messages
 from django.core.exceptions import ValidationError
@@ -12,6 +12,8 @@ import json
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import get_user_model
 
+
+
 # Create your views here.
 def baseView(request):
     '''Esto es la pagina principal'''
@@ -20,7 +22,7 @@ def baseView(request):
     user = None
     if user_id:
         user = Usuario.objects.get(idUsuario=user_id)
-    productos = Producto.objects.all() 
+    productos = Producto.objects.filter(estado_producto=True) #solo mostrare los productos que este activos
     categorias = Categoria.objects.prefetch_related('subcategorias').all()  # Obtiene todas las categorías y sus subcategorías   
     carritos = CarritoProducto.objects.filter(usuario=user)
     return render(request, "base.html",{'user': user, 'productos': productos, 'categorias': categorias,'carritos': carritos})
@@ -45,11 +47,13 @@ def login_view(request):
     
     return render(request, 'base.html')
 
+# se añadio telefono con el valor de NumTelefono para mandarlo a la BD(celular)
 def registroView(request):
     if request.method == 'POST':
         # Obtener los datos del formulario
         nombre = request.POST.get('username')
         correo = request.POST.get('email')
+        telefono = request.POST.get('NumTelefono')
         contraseña = request.POST.get('password')
         confirmar_contraseña = request.POST.get('confirmPassword')
 
@@ -63,7 +67,7 @@ def registroView(request):
             return redirect('registro')
 
         # Crear y guardar el usuario en la base de datos
-        usuario = Usuario(nombre=nombre, correo=correo, contraseña=contraseña)
+        usuario = Usuario(nombre=nombre, correo=correo, contraseña=contraseña, celular=telefono)
         try:
             usuario.save()
             messages.success(request, 'Usuario registrado exitosamente.')
@@ -146,7 +150,14 @@ def agregar_al_carrito(request, producto_id):
             print(f"Producto encontrado: {producto.nombre}")
             user_id = request.session.get('user_id')
             user = Usuario.objects.get(idUsuario=user_id)
-            print(f"Producto encontrado: {user.nombre}")
+            print(f"Usuario encontrado: {user.nombre}")
+
+            # Verificación: Evitar que el usuario agregue su propio producto
+            if producto.usuario == user:
+                mensaje = "No puedes agregar tu propio producto al carrito."
+                print(mensaje)
+                return JsonResponse({'mensaje': mensaje, 'success': False})
+
 
             carrito_producto, created = CarritoProducto.objects.get_or_create(usuario=user, producto=producto)
             print(f"Item del carrito {'creado' if created else 'ya existente'}: {carrito_producto}")
@@ -182,8 +193,6 @@ def cargar_provincias_por_departamento(request):
         return JsonResponse({'provincias': list(provincias)}, status=200)
     return JsonResponse({'error': 'No se encontraron provincias'}, status=404)
 
-#Esta funcion deberia manejar el formulario que esta en el archivo ofertar.html, En si ESTO IGUAL ES OTRO FORMULARIO, PERO ESTE DEBERIA GUARDAR LOS DATOS EN MI 
-from django.shortcuts import get_object_or_404
 
 def ofertarMView(request):
     # Obtener el usuario desde la sesión
@@ -199,7 +208,7 @@ def ofertarMView(request):
     if request.method == 'POST':
         # Obtener los datos del formulario
         titulo = request.POST.get('titulo')
-        provincia = 'Yacuma'
+        provincia = request.POST.get('provincia')
         direccion = request.POST.get('urlMapa')
         material = request.POST.get('material')
         precio = request.POST.get('precio')
@@ -238,4 +247,133 @@ def ofertarMView(request):
 
     # Si la solicitud es GET, renderizar el formulario con el usuario
     return render(request, 'ofertar.html', {'user': user,'is_profile_page': True,'carritos': carritos})
+
+
+def mis_materiales(request):
+    user_id = request.session.get('user_id')
+    user = get_object_or_404(Usuario, idUsuario=user_id)
+    carritos = CarritoProducto.objects.filter(usuario=user_id)
+
+    # Recupera todos los productos del usuario autenticado
+    productos = Producto.objects.filter(usuario=user_id)
+
+    # Filtra los productos si se selecciona una opción en el filtro
+    filtro = request.GET.get('filtro')
+    if filtro == 'activos':
+        productos = productos.filter(estado_producto=True)
+    elif filtro == 'inactivos':
+        productos = productos.filter(estado_producto=False)
+
+
+    return render(request, 'productos_usuario.html', {'user': user,'is_profile_page': True,'carritos': carritos,'misProductos': productos})
+
+def detalle_producto(request, producto_id):
+    user_id = request.session.get('user_id')
+    user = get_object_or_404(Usuario, idUsuario=user_id)
+    carritos = CarritoProducto.objects.filter(usuario=user_id)
+
+    producto = get_object_or_404(Producto, id=producto_id)
+    categorias = Categoria.objects.all()  # Traer todas las categorías
+    subcategorias = subCategoria.objects.filter(categoria=producto.subcategoria.categoria)  # Subcategorías de la categoría del producto
+    departamentos = Departamento.objects.all()  # Todos los departamentos
+    provincias = Provincia.objects.filter(departamento=producto.provincia.departamento)  # Provincias del departamento del producto
+    estados = EstadoDelProducto.objects.all()  # Todos los estados de los productos
+
+    if request.method == 'POST':
+        # Actualizar los datos del producto
+        producto.nombre = request.POST.get('nombre')
+        producto.descripcion = request.POST.get('descripcion')
+        producto.precio = request.POST.get('precio')
+        producto.subcategoria_id = request.POST.get('subcategoria')
+        producto.provincia_id = request.POST.get('provincia')
+        producto.estado_id = request.POST.get('estado')
+        producto.estado_producto = 'estado_producto' in request.POST
+
+        # Verificar que el nombre no sea nulo
+        if not producto.nombre:
+            messages.error(request, "El nombre del producto no puede estar vacío.")
+            return render(request, 'detalle_producto.html', {'producto': producto, 'categorias': categorias, 'subcategorias': subcategorias, 'departamentos': departamentos, 'provincias': provincias, 'estados': estados})
+
+        # Guardar el producto actualizado
+        producto.save()
+
+        # Procesar las nuevas imágenes
+        if request.FILES.getlist('nuevas_imagenes'):
+            for imagen in request.FILES.getlist('nuevas_imagenes'):
+                Imagenes.objects.create(producto=producto, ruta=imagen)
+
+       
+
+        return redirect('detalle_producto', producto_id=producto.id)
+
+    return render(request, 'detalle_producto.html', {
+        'user': user,
+        'is_profile_page': True,
+        'carritos': carritos,
+        'producto': producto,
+        'categorias': categorias,
+        'subcategorias': subcategorias,
+        'departamentos': departamentos,
+        'provincias': provincias,
+        'estados': estados,
+        #'imagenes': producto.imagenes.all(),
+    })
+def eliminar_imagenes(request):
+    if request.method == 'POST':
+        imagenes_a_eliminar = request.POST.getlist('imagenes_a_eliminar')
+        
+        for imagen_id in imagenes_a_eliminar:
+            imagen = get_object_or_404(Imagenes, id=imagen_id)
+            imagen.delete()
+        
+        # Retorna una respuesta de éxito como JSON
+        return JsonResponse({'status': 'success', 'message': 'Imágenes eliminadas correctamente.'})
+    
+    return JsonResponse({'status': 'error', 'message': 'Método no permitido'}, status=405)
+
+def obtener_subcategorias(request, categoria_id):
+    subcategorias = subCategoria.objects.filter(categoria_id=categoria_id).values('id', 'nombre')
+    return JsonResponse({'subcategorias': list(subcategorias)})
+
+def obtener_provincias(request, departamento_id):
+    provincias = Provincia.objects.filter(departamento_id=departamento_id).values('id', 'nombre')
+    return JsonResponse({'provincias': list(provincias)})
+
+def eliminar_producto(request, producto_id):
+    producto = get_object_or_404(Producto, id=producto_id)
+
+    if request.method == 'POST':
+        try:
+            producto.delete()
+            messages.success(request, 'El producto ha sido eliminado exitosamente.')
+            return redirect('mis_materiales')  # Redirigir a la vista de productos o la página principal
+        except Exception as e:
+            messages.error(request, 'Hubo un problema al eliminar el producto: {}'.format(str(e)))
+            return redirect('detalle_producto', producto_id=producto_id)
+
+    # Para propósitos de prueba, permite eliminar también con GET (NO RECOMENDADO en producción)
+    elif request.method == 'GET':
+        try:
+            producto.delete()
+            messages.success(request, 'El producto ha sido eliminado exitosamente.')
+            return redirect('mis_materiales')
+        except Exception as e:
+            messages.error(request, 'Hubo un problema al eliminar el producto: {}'.format(str(e)))
+            return redirect('detalle_producto', producto_id=producto_id)
+
+    messages.error(request, 'Método no permitido.')
+    return redirect('detalle_producto', producto_id=producto_id)
+@csrf_exempt  # Solo si tienes problemas con CSRF, de lo contrario no lo uses
+def eliminar_productos(request):
+    if request.method == 'POST':
+        product_ids = json.loads(request.POST.get('product_ids', '[]'))
+
+        # Eliminar los productos seleccionados
+        Producto.objects.filter(id__in=product_ids).delete()
+
+        # Redirigir de nuevo a la página anterior
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
+
+    return JsonResponse({'error': 'Método no permitido.'}, status=405)
+
 

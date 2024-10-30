@@ -14,19 +14,24 @@
     padding: auto;
     text-align: center;
 }
-
 .contentP p {
     margin-bottom: 1rem;
     text-align: center;
 }
-
+.SinProductos{
+    
+    position: relative;
+    top: 70%;
+    left: 70%;
+    z-index: -1;
+}
 .product-grid {
     display: grid;
     position: relative; /* Cambiado a relative para que no afecte el flujo normal */
     top: auto; /* Eliminado el top absoluto */
     width: 80%;
     left: 10%;
-    /*grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));*/
+    
     grid-template-columns: repeat(4, 1fr);
     gap: 1rem;
     margin: 2px;

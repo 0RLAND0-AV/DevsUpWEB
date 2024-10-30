@@ -1,3 +1,5 @@
+<script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
 {% load static %}
 <!-- Modal de Login -->
 <div id="loginModal" class="modal" style="display: none;">
@@ -9,12 +11,23 @@
         <div class="modal-body">
             <form id="loginForm" method="POST" action="{% url 'login' %}" onsubmit="cerrarLogin()">
                 {% csrf_token %}
-                <input type="text" name="username" placeholder="Nombre de usuario" required="">
-                <input type="password" name="password" placeholder="Contraseña" required="">
+                  <div class="input-box">
+                    <ion-icon name="person-outline"></ion-icon>
+                    <input class="input" type="text" name="username" required>
+                    <label>Nombre de usuario</label>
+                  </div>
+
+                  <div class="input-box">
+                    <ion-icon name="key-outline"></ion-icon>
+                    <input class="input" type="password" name="password" required>
+                    <label> Contraseña</label>
+                  </div>
+                  
+
                 <button type="submit">Ingresar</button>
             </form>
-            <div class="create-account">
-                <a href="{% url 'registro' %}" id="createAccount">Crear cuenta</a>
+            <div class="CrearCuenta">
+                <a  class="BotonCrearCuenta" href="{% url 'registro' %}" id="createAccount">Crear cuenta</a>
             </div>
         </div>
     </div>

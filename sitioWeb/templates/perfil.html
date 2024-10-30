@@ -7,10 +7,20 @@ Perfil
 
 {% block contenidos %}
     {% include 'cuenta.html' %}
+    {% include 'barraPerfil.html' %}
 {% endblock %}
+
 <!--{% block materiales %}
     {% include 'materiales.html' %}
 {% endblock %}-->
 {% block extra_js %}
     <script src="{% static 'perfil.js' %}"></script>
+    <script>
+        function mostrarMisMateriales() {
+            document.getElementById('contenido-dinamico').innerHTML = `
+                {% include 'publicaciones.html' %}
+            `;
+        }
+    
+    </script>
 {% endblock %}

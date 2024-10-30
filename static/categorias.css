@@ -62,7 +62,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    color: var(--text-color);
+    color: var(--white);
 }
 
 .category-btn:hover {
@@ -117,9 +117,10 @@
     background: transparent;
     border: none;
     text-align: left;
-    color: var(--text-color);
+    color: var(--white);
     cursor: pointer;
-    padding: 10px; /* Ajuste de padding para asegurar que cubra todo */
+    margin: 2px;
+    padding: 5px; /* Ajuste de padding para asegurar que cubra todo */
     box-sizing: border-box; /* Asegura que padding no desborde */
     border-radius: 10px;
 }

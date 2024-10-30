@@ -9,7 +9,7 @@
 .dropbtn {
     background-color: var(--primary-color);
     color: var(--white);
-    padding: 10px 20px ; /* Aumenta el espacio interno del botón     padding: 15px 20px; */
+    padding: 10px 10px ; /* Aumenta el espacio interno del botón     padding: 15px 20px; */
     font-size: 16px;
     height: auto;  /* Ajusta la altura total del botón height: 60px;*/
     border: none;
@@ -20,6 +20,7 @@
     display: flex;  /* Asegura que el contenido esté centrado */
     align-items: center;  /* Centra verticalmente el contenido */
     justify-content: center;  /* Centra horizontalmente el contenido */
+    width: 100%;
 }
 
 .dropbtn:hover {
@@ -94,4 +95,17 @@
     font-size: 16px;
     text-align: right;
     color: white;
+}
+
+button.dropbtn span {
+    background-color: #FFA500 !important;
+    color: white !important;
+    font-weight: bold;
+    font-size: 14px;
+    padding: 2px;
+    border-radius: 50%;
+    margin-left: 2px;
+    margin-right: 0px;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
+    display: inline-block;
 }

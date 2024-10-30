@@ -1,29 +1,55 @@
 (function () {
     'use strict';
-  
     // Fetch all the forms we want to apply custom Bootstrap validation styles to
     var forms = document.querySelectorAll('.needs-validation');
-  
+    
     // Loop over them and prevent submission
     Array.prototype.slice.call(forms)
-      .forEach(function (form) {
+    .forEach(function (form) {
         form.addEventListener('submit', function (event) {
-          // Validar los archivos antes de la validación del formulario
-          if (!validarArchivos() || !form.checkValidity()) {
-            event.preventDefault();
-            event.stopPropagation();
-          }
-  
-          // Agregar la clase de validación de Bootstrap
-          form.classList.add('was-validated');
-  
-          // Si el formulario es válido, manejar el envío
-          if (form.checkValidity()) {
-            validarFormulario(event);
-          }
+            // Obtener los campos de título y descripción
+            const tituloInput = document.getElementById('titulo');
+            const descripcionInput = document.getElementById('descripcion');
+
+            /* Verificar que el título y la descripción tengan al menos 1 carácter
+            if (tituloInput.value.trim().length < 10 || descripcionInput.value.trim().length < 1) {
+                event.preventDefault();
+                event.stopPropagation();
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Campo vacío',
+                    text: 'El título y la descripción deben tener al menos 10 carácter.',
+                    confirmButtonText: 'Entendido',
+                    confirmButtonColor: '#02735E' // Color verde
+                });
+                return; // Terminar la función si hay campos vacíos
+            }*/
+
+            // Validar los archivos antes de la validación del formulario
+            if (!validarArchivos() || !form.checkValidity()) {
+                event.preventDefault();
+                event.stopPropagation();
+                // Mostrar alerta con SweetAlert si faltan campos
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Formulario incompleto',
+                    text: 'Por favor, completa todos los campos requeridos y selecciona archivos válidos antes de ofertar.',
+                    confirmButtonText: 'Entendido',
+                    confirmButtonColor: '#02735E' // Color verde
+                });
+            }
+
+            // Agregar la clase de validación de Bootstrap
+            form.classList.add('was-validated');
+
+            // Si el formulario es válido, manejar el envío
+            if (form.checkValidity()) {
+                validarFormulario(event);
+            }
         }, false);
-      });
-  })();
+    });
+})();
+
 // Módulo de validación y manejo de archivos
 const validarArchivos = () => {
     const archivoInput = document.getElementById('archivo');
@@ -32,49 +58,60 @@ const validarArchivos = () => {
 
     if (!archivoInput) return false;
 
-    const fileList = Array.from(archivoInput.files);
     const validTypes = ['image/jpeg', 'image/png', 'image/jpg'];
     const maxFileSize = 2 * 1024 * 1024; // 2 MB en bytes
     const maxFiles = 8; // Máximo de archivos permitidos
     const validFiles = [];
     const removedFiles = [];
 
+    // Si se excede el número máximo de archivos
+    if (archivoInput.files.length > maxFiles) {
+        // Convertimos los archivos a un array y tomamos solo los primeros 8 archivos
+        const selectedFiles = Array.from(archivoInput.files).slice(0, maxFiles);
+
+        // Creamos un DataTransfer para asignar los archivos permitidos de nuevo al input
+        const dataTransfer = new DataTransfer();
+        selectedFiles.forEach(file => dataTransfer.items.add(file));
+        archivoInput.files = dataTransfer.files;
+
+        // Alerta de que se eliminaron archivos adicionales
+        Swal.fire({
+            icon: 'warning',
+            title: 'Límite de archivos',
+            text: `Solo se permiten ${maxFiles} archivos. Los archivos adicionales han sido eliminados automáticamente.`
+        });
+    }
+
     // Limpiar cualquier vista previa anterior
     previewContainer.innerHTML = "";
 
     // Filtrar archivos válidos y acumular los que se eliminarán
-    fileList.forEach(file => {
+    Array.from(archivoInput.files).forEach(file => {
         const isValidType = validTypes.includes(file.type);
         const isValidSize = file.size <= maxFileSize;
 
         if (!isValidType || !isValidSize) {
             removedFiles.push(file.name); // Archivo no válido
         } else {
-            // Solo agregar hasta un máximo de archivos válidos
-            if (validFiles.length < maxFiles) {
-                validFiles.push(file);
+            validFiles.push(file);
 
-                // Crear una miniatura para cada imagen válida
-                const reader = new FileReader();
-                reader.onload = function (e) {
-                    const img = document.createElement('img');
-                    img.src = e.target.result;
-                    previewContainer.appendChild(img); // Añadir la miniatura al contenedor
-                };
-                reader.readAsDataURL(file); // Leer el archivo como DataURL para mostrar la imagen
-            } else {
-                // Si se alcanza el máximo, añadir a la lista de eliminados
-                removedFiles.push(file.name);
-            }
+            // Crear una miniatura para cada imagen válida
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const img = document.createElement('img');
+                img.src = e.target.result;
+                previewContainer.appendChild(img); // Añadir la miniatura al contenedor
+            };
+            reader.readAsDataURL(file);
         }
     });
 
-    // Mostrar alerta personalizada si hay archivos eliminados
+    // Alerta de archivos eliminados por no ser válidos en formato o tamaño
     if (removedFiles.length > 0) {
         Swal.fire({
             icon: 'error',
             title: 'Archivos eliminados',
-            text: `Los siguientes archivos fueron eliminados porque se excedió el límite de ${maxFiles} archivos válidos: ${removedFiles.join(', ')}`,
+            text: `Algunos archivos fueron eliminados por no cumplir con el formato o tamaño permitido: ${removedFiles.join(', ')}`,
             footer: '<label>Solo se aceptan 8 archivos en formato [.jpg, .jpeg, .png] de peso máximo 2MB</label>'
         });
     }
@@ -84,27 +121,22 @@ const validarArchivos = () => {
         fileNameDisplay.textContent = `Archivos seleccionados: ${validFiles.map(file => file.name).join(', ')}`;
         fileNameDisplay.style.color = 'black'; // Cambiar el color a negro si hay archivos válidos
     } else {
-        fileNameDisplay.textContent = "Debe seleccionar almenos una foto para su publicacion";
+        fileNameDisplay.textContent = "Debe seleccionar al menos una foto para su publicación";
         fileNameDisplay.style.color = 'red'; // Cambiar el color a rojo si no hay archivos válidos
     }
     return validFiles.length > 0; // Retorna true si hay archivos válidos
 };
 
-
-
-
-// Habilitar o deshabilitar el botón de ofertar
-
-// Módulo de validación del formulario y tardanza del envio del Form, tod para que se vea la alerta
+// Módulo de validación del formulario y tardanza del envío del Form
 const validarFormulario = (event) => {
-    // Mostrar la alerta de éxito y retrasar el envío del formulario
     event.preventDefault(); // Prevenir el envío del formulario
+    // Si todo está completo, mostrar la alerta de éxito y retrasar el envío del formulario
     Swal.fire({
         position: "top-end",
         icon: "success",
         title: "Tu oferta fue publicada correctamente",
         showConfirmButton: false,
-        timer: 1750 // 1.5 segundos
+        timer: 1750 // 1.75 segundos
     });
 
     setTimeout(() => {
@@ -112,13 +144,10 @@ const validarFormulario = (event) => {
     }, 1750);
 };
 
+
 // Módulo de inicialización de eventos
 const inicializarEventos = () => {
-    /*Swal.fire({
-        title: 'Completa todos los campos del formulario, porfavor',
-        confirmButtonText: 'Continuar', // Cambia el texto del botón aquí
-        confirmButtonColor: '#02735E' // Puedes personalizar el color del botón
-      });*/
+    
     //Añadir reporte de JS al apretar el boton Cancelar
     document.getElementById('button-cancelar').addEventListener('click', function() {
         Swal.fire({
@@ -135,7 +164,8 @@ const inicializarEventos = () => {
             Swal.fire({
             title: "¡Oferta eliminada!",
             text: "Tu publicacion ha sido eliminado correctamente",
-            icon: "success"
+            icon: "success",
+            confirmButtonColor: "#03A678"
         }).then(() => {
             // Redireccionar a la página home.html
             window.location.href = '/';
@@ -146,11 +176,6 @@ const inicializarEventos = () => {
  
     // Asociar la validación de archivos al cambio del input de archivos
     document.getElementById('archivo').addEventListener('change', validarArchivos);
-    
-    // Asociar la validación completa del formulario al submit
-    //document.getElementById('ofertaForm').addEventListener('submit', validarFormulario);
-
-
     // Asociar el cambio del departamento para actualizar las provincias
     document.getElementById('departamento').addEventListener('change', function() {
         const provinciaSelect = document.getElementById('provincia');

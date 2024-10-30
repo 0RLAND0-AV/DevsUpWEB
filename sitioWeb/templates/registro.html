@@ -2,35 +2,103 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registro de Usuario</title>
-    <link rel="stylesheet" href="{% static 'styles.css' %}"> <!-- Asegúrate de tener el CSS en la misma carpeta o ajustar la ruta -->
-    <link rel="stylesheet" href="{% static 'registro.css' %}"> <!-- CSS específico para la página de registro -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Registrate de Usuario</title>
+  <link rel="stylesheet" href="{% static 'styles.css' %}"> <!-- Asegúrate de tener el CSS en la misma carpeta o ajustar la ruta -->
+  <link rel="stylesheet" href="{% static 'registro.css' %}"> <!-- CSS específico para la página de registro -->
+  <script  type = "module"  src = " https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js " > </script> 
+  <script nomodule  src  = " https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js " > </script>
+  
 </head>
 <body>
-    {% if messages %}
-    <ul class="messages">
-        {% for message in messages %}
-            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-        {% endfor %}
-    </ul>
-    {% endif %}
-    <div class="registration-form">
-        <h2>Registro de Usuario</h2>
+    <!-- se modifico esta parte para q se monstrara el toast -->
+    <div id="toast-container" class="toast-container">
+      {% if messages %}
+          {% for message in messages %}
+              <div class="toast{% if message.tags %} {{ message.tags }}{% endif %}">
+                  {{ message }}
+              </div>
+          {% endfor %}
+      {% endif %}
+    </div>
+    <!-- se modifico esta parte para q se monstrara el toast -->
+
+  <div class="container">
+    <div class="left-section">
+        <a href="{% url 'base' %}">
+            <img src="{% static 'LogoIS_Oficial.png' %}" alt="Logo" class="image">
+        </a>
+     <div class="texto"> 
+      <p class="description">Bienvenido a nuestra plataforma de materiales de 
+      construcción usados. Encuentra productos de calidad a precios accesibles. 
+        </p>
+      </div>
+    </div>
+
+    <div class="right-section">
+      <div class="login-box">
+        <h2 class="TituloRegistro">Registro Usuario</h2>
         <form id="registrationForm" method="POST">
             {% csrf_token %}
-            <input type="text" name="username" placeholder="Nombre de usuario" required>
-            <input type="email" name="email" placeholder="Correo electrónico" required>
-            <input type="password" name="password" placeholder="Contraseña" required>
-            <input type="password" name="confirmPassword" placeholder="Confirmar contraseña" required>
-            <button type="submit">Registrarse</button>
-        </form>
-        <div class="login-link">
-            <a href="{% url 'base' %}">¿Ya tienes una cuenta? Inicia sesión</a>
+
+          <!-- se quito el texto del label y se le puso en el placeholder -->
+          <div class="input-box">
+            <input class="input" type="text" name="username" placeholder="Nombre de Usuario (*)" required>
+            <label></label>
+            <ion-icon name="person-outline"></ion-icon>
+          </div>
+
+          <div class="input-box">
+            <input class="input" type="email" name="email" placeholder="Correo Electrónico (*)" required>
+            <label></label>
+            <ion-icon name="mail-unread-outline"></ion-icon>
+          </div>
+          <!-- se añadio la validacion del apartado de telefono con js-->
+           <!-- se le dio name= NumTelefono para mandar la informacion a la BD -->
+          <div class="input-box">
+            <input 
+                id="telefono" 
+                class="input" 
+                type="tel" 
+                name="NumTelefono" 
+                minlength="8" 
+                maxlength="8" 
+                placeholder="Numero Celular"               
+                oninput="toggleRequired(this)"
+                pattern="[0-9]*" 
+                onkeypress="return event.charCode >= 48 && event.charCode <= 57"
+            >
+            <label></label>
+            <ion-icon name="call-outline"></ion-icon>
         </div>
+          
+
+          <div class="input-box">
+            <input class="input" type="password" name="password" placeholder="Contraseña (*)" required>
+            <label></label>
+            <ion-icon name="key-outline"></ion-icon>
+          </div>
+
+          <div class="input-box">
+            <input class="input" type="password" name="confirmPassword" placeholder="Confirmar Contraseña (*)" required>
+            <label></label>
+            <ion-icon name="bag-check-outline"></ion-icon>
+          </div>
+          <!-- se quito el texto del label y se le puso en el placeholder -->
+
+                <div class="login-link">
+                    <label>(*) Campos obligatorios</label>
+                    <br>
+                    <a href="{% url 'base' %}">¿Ya tienes una cuenta? Inicia sesión</a>
+                    <button class="Registrarse" type="submit">Registrarse</button>
+                    <button class="CancelarRegistro"> <a href="{% url 'base' %}" >Cancelar</a> </button>
+                </div>
+        </form>
+      </div>
     </div>
-    
-    <!--<script src="{% static 'registro.js' %}"></script> --><!-- JavaScript específico para la página de registro -->
+  </div>
+  
+  <script src="{% static 'registro.js' %}"></script>
 </body>
 </html>
