@@ -32,11 +32,12 @@ Detalle del producto
             </div>
             
             <div class="form-groupp">
-                <label for="precio">Precio <span class="text-rojo">*</span></label>
-                <input class="form-controll" type="number" name="precio" id="precio" placeholder="Precio Total (Bs)" required autocomplete="off" min="1" 
-                    disabled oninput="this.value = !!this.value && Math.abs(this.value) >= 1 ? this.value : null" maxlength="6" />
+                <label for="precio-producto">Precio <span class="text-rojo">*</span></label>
+                <input class="form-controll" type="number" step="0.01" id="precio-producto" name="precio" value="{{ producto.precio }}" 
+                       required disabled min="1" placeholder="Precio Total (Bs)" 
+                       onkeypress="return (event.charCode >= 48 && event.charCode <= 57)">
                 <div class="invalid-feedback">
-                    Colocale un precio a tu producto, mayor a 0
+                    Coloca un precio válido para el producto.
                 </div>
             </div>
             
