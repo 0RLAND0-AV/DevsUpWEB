@@ -41,12 +41,12 @@ document.getElementById('boton-cancelar-producto').addEventListener('click', fun
     // Mostrar alerta de confirmación
     Swal.fire({
         title: "¿Estás seguro?",
-        text: "Todos los cambios realizados se perderán al descartar",
+        text: "Todos los cambios realizados se perderán",
         icon: "warning",
         showCancelButton: true,
         confirmButtonColor: "#666666",
         cancelButtonColor: "#d33",
-        confirmButtonText: "Descartar",
+        confirmButtonText: "Aceptar",
         cancelButtonText: "Cancelar"
     }).then((result) => {
         if (result.isConfirmed) {

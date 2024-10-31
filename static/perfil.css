@@ -1,5 +1,5 @@
 .menu-perfil {
-    width: 12%;
+    width: 10%;
     background-color: var(--primary-color); /* Verde oscuro */
     padding-top: 10px;
     height: calc(100vh - 60px); /* Ajusta la altura para descontar el header */
@@ -12,8 +12,8 @@
 }
 
 .menu-perfil img {
-    width: 6.25rem;
-    height: 6.25rem;
+    width: 4.25rem;
+    height: 4.25rem;
     border-radius: 50%;
     display: block;
     margin: 0 auto 20px auto;
@@ -24,7 +24,8 @@
 
 .lista-perfil {
     list-style-type: none;
-    padding: 0px;    
+    padding: 0px; 
+    margin-left: 5px;   
 }
 
 .lista-perfil li {
@@ -44,11 +45,22 @@
     
 }
 .lista-perfil :active {
-    background-color: var(--tertiary-color); /* Naranja */
+    background-color:none;
 }
 .lista-perfil li:hover{
+    background-color:none;
+    
+}
+
+.lista-perfil li a  :active {
+    background-color: var(--tertiary-color); /* Naranja */
+}
+.lista-perfil li a:hover{
     background-color: var(--secondary-color);
     
+}
+#cerrarSesionPerfil:hover{
+    background-color: #dc3545;
 }
 
 .profile-config {
@@ -62,10 +74,10 @@
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     margin-left: 5rem;
-    margin-top: 2rem;
+    margin-top: 3rem;
     
     position: relative; /* O quitar si no es necesario */
-    z-index: 1; /* Asegúrate que esté por debajo del menú y barra */
+    z-index: -1; /* Asegúrate que esté por debajo del menú y barra */
     box-sizing: border-box;
     
     
@@ -434,20 +446,21 @@ label {
     }
 
     .menu-perfil {
-        position: fixed; /* Fija el menú en la parte superior */
-        width: 12%;
+        
+        width: 10%;
         height: calc(100vh - 60px); /* Altura completa, menos el header */
         
         left:0;
     }
+    
    
     .profile-config {
         
         
         margin-left: 16%; /* Espacio suficiente para el menú lateral */
-        margin-right: 4rem;
+        margin-right: 3rem;
         width: 75%; /* Que se adapte mejor al tamaño de la pantalla */
-        padding-left: 4rem;
+        padding-left: 3rem;
     }
 
 
@@ -466,10 +479,12 @@ label {
 @media (max-width: 768px) {
 
     main{
+       
         display: flex;
         flex-direction: column; 
         padding: 0;
         margin-top: 120px;
+        width: 100%;
         
     }
     
@@ -480,7 +495,7 @@ label {
         height: 15%;
         z-index: 1;
         
-        position: relative; /* Eliminar la posición fija */
+        position: fixed; /* Eliminar la posición fija */
         top: -43px;
         display: flex; /* Convertir en un menú superior */
         justify-content: space-around; /* Alinear los enlaces horizontalmente */
@@ -488,13 +503,14 @@ label {
         background-color: #02735E;
         margin-left: 0;
         margin-right: 0;
+        margin-top: 100px;
     }
 
     .profile-config {
         order: 2;
         margin-left: 0; /* Eliminar el margen lateral */
         margin-right: 0; /* Eliminar el margen lateral */
-        margin-top: 2rem; /* Reducir el margen superior */
+        margin-top: 4rem; /* Reducir el margen superior */
         padding: 1rem; /* Ajustar el padding en pantallas pequeñas */
         width: 100%; /* Ocupa todo el ancho */
     }
@@ -539,6 +555,12 @@ label {
         padding: 0;
     }
 
+    #previewed{
+        width: 4rem;
+        height: 4rem;
+
+    }
+
     
 
 }
@@ -560,7 +582,7 @@ label {
 
     .menu-perfil {
         width: 10%;
-        height: 10%;
+        
         order:1;
         top: -43px;
     }
@@ -572,7 +594,7 @@ label {
     .menu-perfil img {
         
         width: 3rem;
-        height: 3.5rem;
+        height: 3rem;
     }
     .profile-config{
         order:2;

@@ -116,11 +116,14 @@
     transform: translate(-50%, -50%) scale(1);
 }
 
+
 /* Responsive */
 @media (max-width: 1024px) {
     .subBarraNanvegacion {
         padding: 5px 10px;
         font-size: 11px;
+        
+        margin-top: 40px;
     }
 
     .filtro-fechas-container {
@@ -130,12 +133,16 @@
     #eliminarSeleccionados {
         padding: 5px 10px;
     }
+    
 }
 
 @media (max-width: 768px) {
     .subBarraNanvegacion {
+        position: fixed;
         gap: 10px;
         padding: 5px;
+        
+        margin-top: 75px;
     }
 
     .filtro-fechas-container {
@@ -153,7 +160,11 @@
         font-size: 10px;
         gap: 8px;
         padding: 5px;
+        
     }
+
+    
+    
 
     .filtro-fechas-container {
         margin-left: 0;
@@ -170,11 +181,14 @@
 /* ---------------------------------------------------*/
 /* Contenedor principal de productos */
 .ContenedorProductos{
-    position: absolute;
+    position: relative;
     top: 10%;
     left: 13%;
     width: 85%;
     margin-bottom: 10%;
+    margin-top:100px;
+    
+
 }
 .product-gridd {
     width: 100%;

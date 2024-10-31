@@ -53,10 +53,13 @@
     border-radius:20px;
     transition: all 0.5s;
 }
-button:hover{
-    background-color: var(--secondary-color);
+/*button:hover{
+    background-color: var(--secondary-color) ;
+}*/
+#buttonbuscar:hover{
+   background-color: var(--secondary-color);
 }
-button:active {
+#buttonbuscar:active {
     background-color: var(--tertiary-color);
     color: #fff;
     transform: scale(0.95);

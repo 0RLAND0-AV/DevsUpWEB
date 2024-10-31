@@ -174,14 +174,14 @@ input[type="file"] {
     }
 
     .menu-perfil {
-        width: 100%;
+        
         order:1;
         top: -43px;
     }
     
     .container2 {
         order:2;
-        margin-top: auto;
+        margin-top: 25px;
         margin-bottom:3.5em;    
     }
     .form-group.inline {

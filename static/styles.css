@@ -45,7 +45,7 @@ footer {
     position: absolute; /* No se fija, solo se queda al final del flujo del documento */
     bottom: 0;
     width: 100%;
-    z-index: -1;
+    z-index: 2;
 
 }
 
