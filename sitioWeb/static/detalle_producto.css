@@ -264,8 +264,9 @@ button:hover {
     #detalle-producto-container {
         width:95%;
         order:2;
+        margin-top: 50px;
         
-        margin: auto;
+        
         margin-bottom: 4.5em;
         padding: 15px;
         
@@ -291,5 +292,7 @@ button:hover {
 @media (max-width: 600px) {
     #detalle-producto-container {
         padding: 10px;
+        margin-top: 50px;
+
     }
 }
