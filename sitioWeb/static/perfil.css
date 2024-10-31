@@ -1,5 +1,5 @@
 .menu-perfil {
-    width: 10%;
+    width: 12%;
     background-color: var(--primary-color); /* Verde oscuro */
     padding-top: 10px;
     height: calc(100vh - 60px); /* Ajusta la altura para descontar el header */
@@ -12,8 +12,8 @@
 }
 
 .menu-perfil img {
-    width: 4.25rem;
-    height: 4.25rem;
+    width: 6.25rem;
+    height: 6.25rem;
     border-radius: 50%;
     display: block;
     margin: 0 auto 20px auto;
@@ -24,8 +24,7 @@
 
 .lista-perfil {
     list-style-type: none;
-    padding: 0px; 
-    margin-left: 5px;   
+    padding: 0px;    
 }
 
 .lista-perfil li {
@@ -40,27 +39,17 @@
     color: #fff; /* Cambia el color del texto de los enlaces a blanco */
     text-decoration: none; /* Opcional: elimina el subrayado de los enlaces */
     display: block;
+    padding-left: 10px;
     width: 100%;
     box-sizing: border-box;
     
 }
 .lista-perfil :active {
-    background-color:none;
-}
-.lista-perfil li:hover{
-    background-color:none;
-    
-}
-
-.lista-perfil li a  :active {
     background-color: var(--tertiary-color); /* Naranja */
 }
-.lista-perfil li a:hover{
+.lista-perfil li:hover{
     background-color: var(--secondary-color);
     
-}
-#cerrarSesionPerfil:hover{
-    background-color: #dc3545;
 }
 
 .profile-config {
@@ -74,10 +63,10 @@
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     margin-left: 5rem;
-    margin-top: 3rem;
+    margin-top: 2rem;
     
     position: relative; /* O quitar si no es necesario */
-    z-index: -1; /* Asegúrate que esté por debajo del menú y barra */
+    z-index: 1; /* Asegúrate que esté por debajo del menú y barra */
     box-sizing: border-box;
     
     
@@ -446,21 +435,20 @@ label {
     }
 
     .menu-perfil {
-        
-        width: 10%;
+        position: fixed; /* Fija el menú en la parte superior */
+        width: 12%;
         height: calc(100vh - 60px); /* Altura completa, menos el header */
         
         left:0;
     }
-    
    
     .profile-config {
         
         
         margin-left: 16%; /* Espacio suficiente para el menú lateral */
-        margin-right: 3rem;
+        margin-right: 4rem;
         width: 75%; /* Que se adapte mejor al tamaño de la pantalla */
-        padding-left: 3rem;
+        padding-left: 4rem;
     }
 
 
@@ -479,12 +467,10 @@ label {
 @media (max-width: 768px) {
 
     main{
-       
         display: flex;
         flex-direction: column; 
         padding: 0;
         margin-top: 120px;
-        width: 100%;
         
     }
     
@@ -495,7 +481,7 @@ label {
         height: 15%;
         z-index: 1;
         
-        position: fixed; /* Eliminar la posición fija */
+        position: relative; /* Eliminar la posición fija */
         top: -43px;
         display: flex; /* Convertir en un menú superior */
         justify-content: space-around; /* Alinear los enlaces horizontalmente */
@@ -503,14 +489,13 @@ label {
         background-color: #02735E;
         margin-left: 0;
         margin-right: 0;
-        margin-top: 100px;
     }
 
     .profile-config {
         order: 2;
         margin-left: 0; /* Eliminar el margen lateral */
         margin-right: 0; /* Eliminar el margen lateral */
-        margin-top: 4rem; /* Reducir el margen superior */
+        margin-top: 2rem; /* Reducir el margen superior */
         padding: 1rem; /* Ajustar el padding en pantallas pequeñas */
         width: 100%; /* Ocupa todo el ancho */
     }
@@ -555,12 +540,6 @@ label {
         padding: 0;
     }
 
-    #previewed{
-        width: 4rem;
-        height: 4rem;
-
-    }
-
     
 
 }
@@ -581,20 +560,14 @@ label {
     }
 
     .menu-perfil {
-        width: 10%;
-        
         order:1;
         top: -43px;
     }
-    .lista-perfil li {
-        width: 50%; /* Margen reducido para enlaces */
-        padding: 0%;
-        margin-right: 0%;
-    }
+
     .menu-perfil img {
         
-        width: 3rem;
-        height: 3rem;
+        width: 5rem;
+        height: 5rem;
     }
     .profile-config{
         order:2;
@@ -604,6 +577,7 @@ label {
         
         width: 100%; /* Asegúrate de que ocupe todo el ancho disponible */
         margin: 0; /* Ajusta márgenes si es necesario */
+        padding: 0 0 0 1rem; /* Ajustar padding en pantallas pequeñas */
     }
 
     /* Botones más pequeños */
