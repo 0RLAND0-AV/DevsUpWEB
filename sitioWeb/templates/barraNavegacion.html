@@ -10,14 +10,13 @@
             <input class="inputBuscar" id="inputBuscar" type="text" placeholder="Buscar productos...">
             <button id="buttonbuscar" onclick="buscarProducto()"><i class="fas fa-search"></i></button>
         {% endif %}
-        <p id="noResultMessage" style="display: none; color: red;">No se encontró ningún producto con ese nombre.</p>
     </div>
 
     <div class="nav-links" id="navLinks">
         <a href="{% url 'base' %}" class="nav-link">Inicio</a> <!-- Asegúrate de tener la URL configurada -->
          <!-- Botón del carrito -->
          <div class="dropdown">
-            <button class="dropbtn">Carrito <span>0</span></button> <!-- El número inicial es solo para mostrar el formato -->
+            <button class="dropbtn">Carrito <span id="carrito-contador">{{ cantidad_carrito }}</span></button> <!-- El número inicial es solo para mostrar el formato -->
             <div class="cart-popup" id="cart-popup">
                 <h3>Carrito de Compras</h3>
                 {% if carritos %}

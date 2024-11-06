@@ -32,7 +32,8 @@
     width: 80%;
     left: 10%;
     
-    grid-template-columns: repeat(4, 1fr);
+   /* grid-template-columns: repeat(4, 233px)*/
+    grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
     gap: 1rem;
     margin: 2px;
 }
@@ -80,6 +81,8 @@
     color: #02735e;
     font-size: 1.2rem;
     margin-bottom: 0.5rem;
+    overflow: hidden; /* Oculta el contenido que excede */
+    text-overflow: ellipsis; /* Muestra "..." si hay un desbordamiento */
 }
 
 .product-card:hover h3 {
@@ -90,6 +93,8 @@
     color: #ffffff;
     font-size: 16px; /* Ajustado a un tamaño más visible */
     margin-bottom: 0.5rem;
+    overflow: hidden; /* Oculta el contenido que excede */
+    text-overflow: ellipsis; /* Muestra "..." si hay un desbordamiento */
 }
 
 .product-card:hover h2 {
@@ -120,7 +125,7 @@
 }
 
 .product-card .precio {
-    color: crimson;
+    color: var(--eliminarColor);
     font-size: 18px;
     max-height: 4.5em; /* Ajusta este valor para permitir 3 líneas de texto */
     overflow: hidden;
@@ -142,8 +147,8 @@
         overflow: hidden;
     }
     .product-grid {
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        grid-template-columns: repeat(4, 1fr);
+       /* grid-template-columns: repeat(auto-fit, minmax(200px, 3));
+        grid-template-columns: repeat(4, 1fr);*/
         top: auto; /* Eliminado el top absoluto */
         position: relative;
         width: 100%;
@@ -162,12 +167,14 @@
         overflow: hidden;
     }
     .product-grid {
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        grid-template-columns: repeat(2, 1fr);
+       /* grid-template-columns: repeat(auto-fit, minmax(2, 190px));
+        grid-template-columns: repeat(2, 1fr);*/
+        grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
         top: auto; /* Eliminado el top absoluto */
         position: relative;
         width: 100%;
         left:0;
+        margin: 2px;
         }
 }
 @media (max-width: 420px) {
@@ -181,12 +188,13 @@
         overflow: hidden;
     }
     .product-grid {
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        grid-template-columns: repeat(1, 1fr);
+        /*grid-template-columns: repeat(auto-fit, minmax(1, 190px));
+        grid-template-columns: repeat(1, 1fr);*/
         top: auto; /* Eliminado el top absoluto */
         position: relative;
         width: 100%;
         left:0;
+        margin: 2px;
         
     }
 

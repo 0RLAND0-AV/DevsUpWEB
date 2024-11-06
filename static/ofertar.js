@@ -7,23 +7,6 @@
     Array.prototype.slice.call(forms)
     .forEach(function (form) {
         form.addEventListener('submit', function (event) {
-            // Obtener los campos de título y descripción
-            const tituloInput = document.getElementById('titulo');
-            const descripcionInput = document.getElementById('descripcion');
-
-            /* Verificar que el título y la descripción tengan al menos 1 carácter
-            if (tituloInput.value.trim().length < 10 || descripcionInput.value.trim().length < 1) {
-                event.preventDefault();
-                event.stopPropagation();
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Campo vacío',
-                    text: 'El título y la descripción deben tener al menos 10 carácter.',
-                    confirmButtonText: 'Entendido',
-                    confirmButtonColor: '#02735E' // Color verde
-                });
-                return; // Terminar la función si hay campos vacíos
-            }*/
 
             // Validar los archivos antes de la validación del formulario
             if (!validarArchivos() || !form.checkValidity()) {

@@ -4,6 +4,10 @@ document.addEventListener("DOMContentLoaded", function() {
     const filtroOrden = document.getElementById("filtro-fechas");
     const productosContainer = document.getElementById("product-gridd");
     const productos = Array.from(document.querySelectorAll(".tarjeta-productoo"));
+    const noResultMessage = document.getElementById("noResultMessage");
+    const noActiveMessage = document.getElementById("noActiveMessage");
+    const noInactiveMessage = document.getElementById("noInactiveMessage");
+
 
     function aplicarFiltros() {
         const estadoSeleccionado = filtroEstado.value;
@@ -18,6 +22,15 @@ document.addEventListener("DOMContentLoaded", function() {
                 (estadoSeleccionado === "inactivos" && !esActivo)
             );
         });
+
+        //Mostrar mensajes según el estado de los productos
+        const productosActivos = productos.filter(producto => producto.querySelector(".boton-estado").classList.contains("activo"));
+        const productosInactivos = productos.filter(producto => !producto.querySelector(".boton-estado").classList.contains("activo"));
+
+        // Mostrar el mensaje adecuado según el filtro
+        noResultMessage.style.display = (estadoSeleccionado === "todos" && productosFiltrados.length === 0) ? "block" : "none";
+        noActiveMessage.style.display = (estadoSeleccionado === "activos" && productosActivos.length === 0) ? "block" : "none";
+        noInactiveMessage.style.display = (estadoSeleccionado === "inactivos" && productosInactivos.length === 0) ? "block" : "none";
 
         // Ordenar por fecha
         productosFiltrados.sort((a, b) => {

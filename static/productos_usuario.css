@@ -58,17 +58,22 @@
     width: 110px;
     border: none;
     border-radius: 25px;
-    background-color: red;
+    background-color: var(--eliminarColor);
     color: #fff;
     cursor: pointer;
     transition: background-color 0.3s;
-    box-shadow: 1px 1px 3px 2px var(--primary-color);
 }
 
 #eliminarSeleccionados:hover {
-    box-shadow: 1px 1px 2px 1px var(--tertiary-color);
+    background-color: var(--eliminarHover);
+    box-shadow: 0 6px 12px rgba(73, 80, 87, 0.4);
     padding: 4px 6px;
 }
+#eliminarSeleccionados:active {
+    background-color: var(--eliminarActive);
+    box-shadow: 0 2px 4px rgba(52, 58, 64, 0.2);
+    transform: scale(0.95);
+  }
 
 .eliminar-container {
     display: flex;
@@ -94,7 +99,7 @@
 }
 
 .checkbox-burbuja input:checked + span {
-    background-color: red;
+    background-color: var(--eliminarColor);
 }
 
 .checkbox-burbuja span:after {
@@ -105,7 +110,7 @@
     left: 50%;
     width: 12px;
     height: 12px;
-    background: white;
+    background: var(--white);
     border-radius: 50%;
     transform: translate(-50%, -50%) scale(0);
     transition: transform 0.3s ease;
@@ -116,14 +121,11 @@
     transform: translate(-50%, -50%) scale(1);
 }
 
-
 /* Responsive */
 @media (max-width: 1024px) {
     .subBarraNanvegacion {
         padding: 5px 10px;
         font-size: 11px;
-        
-        margin-top: 40px;
     }
 
     .filtro-fechas-container {
@@ -133,16 +135,12 @@
     #eliminarSeleccionados {
         padding: 5px 10px;
     }
-    
 }
 
 @media (max-width: 768px) {
     .subBarraNanvegacion {
-        position: fixed;
         gap: 10px;
         padding: 5px;
-        
-        margin-top: 75px;
     }
 
     .filtro-fechas-container {
@@ -160,11 +158,7 @@
         font-size: 10px;
         gap: 8px;
         padding: 5px;
-        
     }
-
-    
-    
 
     .filtro-fechas-container {
         margin-left: 0;
@@ -181,14 +175,11 @@
 /* ---------------------------------------------------*/
 /* Contenedor principal de productos */
 .ContenedorProductos{
-    position: relative;
+    position: absolute;
     top: 10%;
     left: 13%;
     width: 85%;
     margin-bottom: 10%;
-    margin-top:100px;
-    
-
 }
 .product-gridd {
     width: 100%;
@@ -199,6 +190,34 @@
     padding: 10px;
     background-color: #f3f4f6;
     border-radius: 8px;
+}
+
+.MensajeNoEncontrado {
+    padding-top: 20%;
+    font-size: 18px;
+    text-align: center;
+    color: var(--eliminarColor);
+    display: none;
+}
+/*Estilos de los mensajes que se mostraran cuando no haya productos para  mostrar*/
+.boton-publicar {
+    display: inline-block; /* Permite aplicar padding y border */
+    padding: 5px 10px;
+    background-color: var(--primary-color); 
+    box-shadow:2px 2px 5px 1px  var(--secondary-color);
+    color: white; 
+    border: none; 
+    border-radius: 5px;
+    text-decoration: none; 
+    cursor: pointer; 
+    transition: background-color 0.3s; /* Transición suave al cambiar color */
+}
+
+.boton-publicar:hover {
+    background-color: var(--secondary-color); /* Color al pasar el mouse */
+}
+.boton-publicar:active {
+    background-color: var(--tertiary-color); /* Color al pasar el mouse */
 }
 
 /* Tarjeta de producto individual */
@@ -246,7 +265,7 @@
 }
 
 .checkbox-burbuja input:checked + span {
-    background-color: red; /* Color al estar seleccionado */
+    background-color: var(--eliminarColor); /* Color al estar seleccionado */
 }
 
 .checkbox-burbuja span:after {
@@ -257,7 +276,7 @@
     left: 50%;
     width: 12px;
     height: 5px;
-    background: white;
+    background: var(--white);
     border-radius: 50%;
     transform: translate(-50%, -50%) scale(0); /* Ocultar círculo interno */
     transition: transform 0.3s ease; /* Animación suave */
@@ -331,7 +350,7 @@
     border: none;
     border-radius: 5px;
     border-bottom: 1px;
-    color: white;
+    color: var(--white);
     font-weight: bold;
     text-align: center;
     cursor: pointer;
@@ -344,12 +363,12 @@
 
 /* Estilo para el estado activo (verde) */
 .boton-estado.activo {
-    background-color: #28a745; /* Verde */
+    background-color: var(--primary-color); /* Verde */
 }
 
 /* Estilo para el estado inactivo (rojo) */
 .boton-estado.inactivo {
-    background-color: #dc3545; /* Rojo */
+    background-color: var(--eliminarColor); /* Rojo */
 }
 
 
@@ -391,7 +410,7 @@
     margin-bottom: 0px;
     width: 100%;
     background-color: var(--tertiary-color); /* Color verde */
-    color: white; /* Color de texto blanco */
+    color: var(--white); /* Color de texto blanco */
     text-align: center;
     border-radius: 5px; /* Bordes redondeados */
     text-decoration: none; /* Quitar el subrayado del enlace */
@@ -555,7 +574,7 @@ input[type="file"] {
     display: inline-block;
     padding: 10px 20px;
     background-color: var(--primary-color);
-    color: white;
+    color: var(--white);
     border-radius: 5px;
     cursor: pointer;
     font-size: 16px;
@@ -632,7 +651,7 @@ input[type="file"] {
 }
 
 .btn-primary {
-    background-color: #02735E; /* Color cuando está deshabilitado */
+    background-color: var(--primary-color); /* Color cuando está deshabilitado */
 }
 
 .btn-primary:disabled {
@@ -642,7 +661,7 @@ input[type="file"] {
 }
 
 .btn-secondary {
-    background-color: #c02323;
+    background-color: var(--eliminarColor);
 }
 
 .btn:hover {

@@ -39,7 +39,7 @@ label {
 }
 /* Color de asterisco */
 .text-rojo {
-    color: red;
+    color: var(--eliminarColor);
     margin-left: 2px; /* Espacio entre el texto y el asterisco */
 }
 input[type="text"],
@@ -70,7 +70,7 @@ input[type="file"] {
     display: inline-block;
     padding: 10px 20px;
     background-color: var(--primary-color);
-    color: white;
+    color: var(--white);
     border-radius: 5px;
     cursor: pointer;
     font-size: 16px;
@@ -146,7 +146,7 @@ input[type="file"] {
 }
 
 .btn-primary {
-    background-color: #02735E; /* Color cuando está deshabilitado */
+    background-color: var(--primary-color); /* Color cuando está deshabilitado */
 }
 
 .btn-primary:disabled {
@@ -155,8 +155,13 @@ input[type="file"] {
     pointer-events: none; /* Desactivar cualquier interacción con el botón */
 }
 
-.btn-secondary {
-    background-color: #c02323;
+#button-cancelar {
+    background-color: var(--eliminarColor);
+    
+}
+
+#button-cancelar:hover {
+    background-color: #666666 ;
 }
 
 .btn:hover {
@@ -174,14 +179,14 @@ input[type="file"] {
     }
 
     .menu-perfil {
-        
+        width: 100%;
         order:1;
         top: -43px;
     }
     
     .container2 {
         order:2;
-        margin-top: 25px;
+        margin-top: auto;
         margin-bottom:3.5em;    
     }
     .form-group.inline {

@@ -5,6 +5,14 @@
     --text-color: #333;
     --background-color: #f4f4f4;
     --white: #ffffff;
+    
+    --cancelarColor:#6c757d;
+    --cancelarHover:#495057;
+    --cancelarActive:#5a6268;
+
+    --eliminarColor:#dc3545;
+    --eliminarHover:#b51e2a;
+    --eliminarActive:#c82333;
 }
 
 * {
@@ -45,7 +53,7 @@ footer {
     position: absolute; /* No se fija, solo se queda al final del flujo del documento */
     bottom: 0;
     width: 100%;
-    z-index: 2;
+    z-index: -1;
 
 }
 

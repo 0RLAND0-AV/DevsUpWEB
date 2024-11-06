@@ -34,3 +34,16 @@ document.getElementById('loginForm').addEventListener('submit', function(event) 
     modal.style.display = "none";
     // Aquí puedes agregar código para mostrar un mensaje o redirigir al usuario si el login es exitoso.
 });
+//Controlar mejor el login a traves de regstro,html para que se te abra directo cuando selecciones ya tienes cuenta ?
+const params = new URLSearchParams(window.location.search);
+if (params.get('login') === '1') {
+    // Mostrar el modal de login si 'login=1' está en la URL
+    document.getElementById("loginModal").style.display = "block";
+}
+// Cerrar el modal y limpiar el parámetro de la URL
+if (span) {
+    span.onclick = function() {
+        modal.style.display = "none";
+        window.history.replaceState({}, document.title, window.location.pathname);
+    }
+}

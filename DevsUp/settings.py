@@ -26,6 +26,7 @@ SECRET_KEY = 'django-insecure-5s%ua8)e+b1a88(20+61bbj@_qsi^4_(-3c(r+x-#p=4-bjxv@
 DEBUG = False
 
 ALLOWED_HOSTS = [ 'DevsUpWEB.pythonanywhere.com', 'localhost']
+
 # media para que encuentre las imagenes que el usuario suba (donde guarda las imagenes)
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

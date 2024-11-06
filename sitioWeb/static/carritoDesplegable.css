@@ -33,13 +33,13 @@
     position: absolute;
     top: 100%; /* Hace que el popup aparezca justo debajo del botón */
     right: 0;
-    background-color: #03a678;
+    background-color: var(--primary-color);
     min-width: 320px;
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
     padding: 15px;
     z-index: 1000;
     border-radius: 10px;
-    color: white;
+    color: var(--white);
     font-family: Arial, sans-serif;
 }
 
@@ -66,19 +66,19 @@
     justify-content: space-between;
     align-items: center;
     padding: 8px 0;
-    background-color: #02735e;
+    background-color: var(--secondary-color);
     border-radius: 5px;
     margin-bottom: 8px;
 }
 
 .cart-item span {
-    color: white;
+    color: var(--white);
     font-weight: bold;
 }
 
 .remove-from-cart {
-    background-color: #ff4d4d;
-    color: white;
+    background-color: var(--eliminarColor);
+    color: var(--white);
     border: none;
     padding: 5px 8px;
     border-radius: 5px;
@@ -87,24 +87,24 @@
 }
 
 .remove-from-cart:hover {
-    background-color: #cc0000;
+    background-color: var(--eliminarHover);
 }
 
 .cart-total {
     margin-top: 10px;
     font-size: 16px;
     text-align: right;
-    color: white;
+    color: var(--white);
 }
 
 button.dropbtn span {
     background-color: var(--tertiary-color) !important;
-    color: white !important;
+    color: var(--white) !important;
     font-weight: bold;
     font-size: 14px;
-    padding: 2px;
+    padding: 2px 6px;
     border-radius: 50%;
-    margin-left: 2px;
+    margin-left: 8px;
     margin-right: 0px;
     box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
     display: inline-block;

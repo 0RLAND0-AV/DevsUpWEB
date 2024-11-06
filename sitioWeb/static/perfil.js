@@ -8,7 +8,7 @@ document.getElementById('editar-imagen').addEventListener('click', function() {
 // Opcional: Mostrar una vista previa de la imagen seleccionada
 document.getElementById('imagenPerfil').addEventListener('change', function(event) {
     const file = event.target.files[0]; // Obtiene el archivo seleccionado
-    if (file) {
+    if (file&& (file.type === 'image/png' || file.type === 'image/jpeg')) {
         const reader = new FileReader(); // Crea una única instancia de FileReader
         reader.onload = function(e) {
             const preview = document.getElementById('preview');
@@ -30,6 +30,9 @@ document.getElementById('imagenPerfil').addEventListener('change', function(even
         saveButton.style.justifyContent = 'center';  // Centra el texto horizontalmente
         saveButton.style.alignItems = 'center';  // Centra el texto verticalmentee
         
+    }else {
+        alert("Por favor selecciona una imagen en formato PNG o JPG.");
+        event.target.value = ""; // Limpia el input si el archivo no es válido
     }  
 });
 //------------modal nombre-------------

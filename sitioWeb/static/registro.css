@@ -11,7 +11,7 @@
     align-items: center;
     height: 100vh;
     /*background: linear-gradient(135deg, #6D83F2, #B667F1);*/
-    background: white;
+    background: var(--white);
   }
   
   .container {
@@ -40,7 +40,7 @@
     align-items: center;
    /* justify-content: center;*/
     padding: 20px;
-    color: white;
+    color: var(--white);
   }
   .left-section:hover{
     transition: all 1s;
@@ -105,7 +105,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: white;
+    background-color: var(--white);
     border-radius: 20px;
     box-shadow: 5px 6px 10px black;
     transition: all 1s;
@@ -117,7 +117,7 @@
   }
   
   .login-box {
-    color: #014040;
+    color: var(--secondary-color);
     width: 100%;
     height: 100%;
    /* max: width 100px; ;/max: width:320px*/
@@ -131,7 +131,7 @@
     color: #333;
   }
   h2{
-    color: #014040;
+    color: var(--secondary-color);
   }
   
   .input-box {
@@ -140,9 +140,10 @@
   }
   .input{
     border: none;
+    margin-bottom: 13px;
   }
   .input:hover{
-    border: 1px solid  #02735E;
+    border: 1px solid  var(--primary-color);
   }
   
   .input-box input {
@@ -161,7 +162,7 @@
     top: 50%;
     left: 10px;
     transform: translateY(-50%);
-    color:#02735E;
+    color: var(--primary-color);
     pointer-events: none;
     transition: 0.3s;
     opacity: 0.5;
@@ -171,7 +172,7 @@
   .input-box input:valid ~ label {
     top: -10px;
     left: 10px;
-    color: #014040;
+    color: var(--secondary-color);
     font-size: 12px;
     opacity: 10;
   }
@@ -180,7 +181,7 @@
     width: 100%;
     padding: 10px;
     /*background: linear-gradient(135deg, #6D83F2, #B667F1);*/
-    background: #02735E;
+    background: var(--primary-color);
     border: none;
     border-radius: 5px;
     color: #fff;
@@ -191,11 +192,11 @@
   
   .btn:hover {
     /*background: linear-gradient(135deg, #5A74E3, #A454D8);*/
-    background: #014040;
+    background: var(--secondary-color);
     box-shadow: 1px 1px 2px rgb(100, 95, 95);
   }
   .btn:active {
-    background: orange;
+    background: var(--tertiary-color);
     box-shadow: 2px 2px 2px black;
     color: black;
     transform: scale(0.98); 
@@ -242,9 +243,13 @@
   .CancelarRegistro a{
     text-decoration: none;
     color: var(--white);
+    display: block; /* Ocupa todo el espacio del botón */
+    width: 100%;
+    height: 100%;
+    padding: 10px 0; /* Ajusta el padding si es necesario */
   }
   .CancelarRegistro:hover{
-    background-color: red; 
+    background-color: var(--eliminarHover); 
   }
   .CancelarRegistro:active{
     background-color: var(--tertiary-color);
@@ -278,10 +283,90 @@
 }
 
 .toast.error {
-    background-color: #dc3545; /* Color de fondo para error */
+    background-color: var(--eliminarColor); /* Color de fondo para error */
 }
 
 .toast.show {
     opacity: 1; /* Hacer visible */
     transform: translateY(0); /* Posición final */
+}
+/* Media Queries para dispositivos móviles */
+@media (max-width: 768px) {
+  .container {
+    width: 80%;
+    height: auto; /* Cambia la altura para que se ajuste al contenido */
+  }
+
+  .left-section {
+    position: absolute;
+    right: 5%;
+    top: 30%;
+    width: 50%;
+    height: 45%; /* Cambia la altura para que se ajuste al contenido */
+  }
+  ion-icon {
+    position: absolute;
+    top: -20px;
+    right: 99%;
+    padding: 5px;
+    height: 60px;
+    width: 15px;
+  }
+  
+  .right-section {
+    position: absolute;
+    top: 20%;
+    left: 5%;
+    width: 63%;
+    padding: 20px; /* Reduce el padding para dispositivos móviles */
+    transition: all 0.5s;
+  }
+  .right-section:hover{
+    width: 56%;
+  }
+
+  .image {
+    width: 70px; /* Reduce el tamaño de la imagen */
+    height: 70px; /* Reduce el tamaño de la imagen */
+  }
+  .image:hover{
+    width: 80px;
+    height: 80px;
+  }
+
+  .login-box h2 {
+    font-size: 18px; /* Reduce el tamaño de la fuente del título */
+    padding: 1%;
+    margin: 1%;
+  }
+ .input-box{
+  margin-bottom: 10px;
+ }
+  .input-box input {
+    padding: 10px; /* Reduce el padding de los inputs */
+    font-size: 12px; /* Reduce el tamaño de la fuente de los inputs */
+  }
+ label{
+  font-size: 10px;
+ }
+ a{
+  font-size: 12px;
+ }
+  .btn {
+    padding: 2px; /* Reduce el padding del botón */
+    font-size: 10px; /* Reduce el tamaño de la fuente del botón */
+  }
+.texto{
+  height: 170px;
+  width: 94px;
+  margin-bottom: 0px;
+  margin-left: 5px;
+}
+  .description {
+    font-size: 11px; /* Reduce el tamaño de la descripción */
+  }
+
+  .toast {
+    padding: 2px 4px; /* Ajusta el padding de la notificación */
+  }
 }

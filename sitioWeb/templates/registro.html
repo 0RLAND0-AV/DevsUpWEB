@@ -7,6 +7,8 @@
   <title>Registrate de Usuario</title>
   <link rel="stylesheet" href="{% static 'styles.css' %}"> <!-- Asegúrate de tener el CSS en la misma carpeta o ajustar la ruta -->
   <link rel="stylesheet" href="{% static 'registro.css' %}"> <!-- CSS específico para la página de registro -->
+  
+  <link rel="stylesheet" href="{% static 'login.css' %}">
   <script  type = "module"  src = " https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js " > </script> 
   <script nomodule  src  = " https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js " > </script>
   
@@ -44,10 +46,18 @@
 
           <!-- se quito el texto del label y se le puso en el placeholder -->
           <div class="input-box">
-            <input class="input" type="text" name="username" placeholder="Nombre de Usuario (*)" required>
+            <input 
+                class="input" 
+                type="text" 
+                name="username" 
+                placeholder="Nombre de Usuario (*)" 
+                required 
+                pattern="[A-Za-z]{3,}"                
+                oninput="validateUsername(this)"
+            >
             <label></label>
             <ion-icon name="person-outline"></ion-icon>
-          </div>
+         </div>
 
           <div class="input-box">
             <input class="input" type="email" name="email" placeholder="Correo Electrónico (*)" required>
@@ -75,7 +85,8 @@
           
 
           <div class="input-box">
-            <input class="input" type="password" name="password" placeholder="Contraseña (*)" required>
+            <input class="input" type="password" name="password" placeholder="Contraseña (*)" required minlength="4" title="La contraseña debe tener almenos 4 caracteres">
+
             <label></label>
             <ion-icon name="key-outline"></ion-icon>
           </div>
@@ -90,7 +101,7 @@
                 <div class="login-link">
                     <label>(*) Campos obligatorios</label>
                     <br>
-                    <a href="{% url 'base' %}">¿Ya tienes una cuenta? Inicia sesión</a>
+                    <a href="{% url 'base' %}?login=1" class="nav-link" id="loginBtn"> ¿Ya tienes una cuenta? Inicia sesión</a>
                     <button class="Registrarse" type="submit">Registrarse</button>
                     <button class="CancelarRegistro"> <a href="{% url 'base' %}" >Cancelar</a> </button>
                 </div>
@@ -100,5 +111,6 @@
   </div>
   
   <script src="{% static 'registro.js' %}"></script>
+  <script src="{% static 'login.js' %}"></script>
 </body>
 </html>

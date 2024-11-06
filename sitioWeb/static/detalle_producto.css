@@ -4,7 +4,7 @@
     max-width: 900px;
     width: 70%;
     padding: 30px;
-    background-color: #f1f1f1;
+    background-color: var(--white);
     border-radius: 10px;
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
     font-family: 'Arial', sans-serif;
@@ -32,17 +32,17 @@
 }
 
 .form-controll:invalid {
-    border-color: #dc3545;
+    border-color: var(--eliminarColor);
     box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
 }
 
 .text-rojo {
-    color: #dc3545;
+    color: var(--eliminarColor);
 }
 
 .invalid-feedback {
     display: none;
-    color: #dc3545;
+    color: var(--eliminarColor);
     font-size: 0.875em;
 }
 
@@ -117,7 +117,7 @@
     display: inline-block; /* Hacer que el label actúe como un botón */
     padding: 7px 14px; /* Espaciado interior */
     color: white; /* Color del texto */
-    background-color: #02735E; /* Verde oscuro */
+    background-color: var(--primary-color); /* Verde oscuro */
     font-size: 16px; /* Tamaño de fuente */
     border: none; /* Sin bordes */
     border-radius: 5px; /* Bordes redondeados */
@@ -128,7 +128,7 @@
 
 /* Efecto hover para el botón "Añadir" */
 .nuevas-imagenes1:hover {
-    background-color: #004d00; /* Color más oscuro al pasar el ratón */
+    background-color: var(--secondary-color); /* Color más oscuro al pasar el ratón */
 }
 
 /* Estilos para el botón "Eliminar" */
@@ -138,7 +138,7 @@
     display: inline-block; /* Hacer que el label actúe como un botón */
     padding: 7px 14px; /* Espaciado interior */
     color: white; /* Color del texto */
-    background-color: #c02323; /* Rojo oscuro */
+    background-color: var(--eliminarColor); /* Rojo oscuro */
     font-size: 16px; /* Tamaño de fuente */
     border: none; /* Sin bordes */
     border-radius: 5px; /* Bordes redondeados */
@@ -149,7 +149,7 @@
 
 /* Efecto hover para el botón "Eliminar" */
 .borrar-imagenes1:hover {
-    background-color: #8b0000; /* Color más oscuro al pasar el ratón */
+    background-color: var(--eliminarHover); /* Color más oscuro al pasar el ratón */
 }
 
 /* Botones */
@@ -165,39 +165,39 @@ button {
 }
 
 button:hover {
-    background-color: #45a049;
+    background-color: var(--primary-color);
 }
 
 /* Botón de guardar */
 #boton-guardar-producto {
-    background-color: #03a678;
+    background-color: var(--primary-color);
     display: none;
     width: 100%;
 }
 /* Botón de cancelar Editar*/
 #boton-cancelar-producto {
-    background-color: #F27405;
+    background-color: var(--tertiary-color);
    
     display: none;
     width: 100%;
 }
 /* Botones de editar y eliminar */
 #editar-producto {
-    background-color: #02735E;
+    background-color: var(--primary-color);
     width: 48%;
     margin: 5px;
     display: inline-block;
 }
 
 #eliminar-producto {
-    background-color: #731702;
+    background-color: var(--eliminarColor);
     width: 48%;
     margin: 5px;
     display: inline-block;
 }
 
 #eliminar-producto:hover {
-    background-color: #d32f2f;
+    background-color: var(--eliminarHover);
 }
 
 /* Checkbox */
@@ -264,9 +264,8 @@ button:hover {
     #detalle-producto-container {
         width:95%;
         order:2;
-        margin-top: 50px;
         
-        
+        margin: auto;
         margin-bottom: 4.5em;
         padding: 15px;
         
@@ -292,7 +291,21 @@ button:hover {
 @media (max-width: 600px) {
     #detalle-producto-container {
         padding: 10px;
-        margin-top: 50px;
-
     }
+}
+
+
+/* para mostrar el contador flotante de imagenes  */
+.notificacion-flotante {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #333;
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 5px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+    z-index: 1000;
 }

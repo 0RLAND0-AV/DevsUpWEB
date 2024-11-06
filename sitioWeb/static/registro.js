@@ -22,3 +22,18 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 3000);
     });
 });
+
+
+
+// controla en tiempo real el ingreso de SOLO letras en el input de nombre
+function validateUsername(input) {
+    // Permite solo letras y al menos 3 caracteres
+    input.value = input.value.replace(/[^A-Za-z]/g, ''); // Remueve caracteres no permitidos
+
+    // Si tiene menos de 3 caracteres, muestra el mensaje de error
+    if (input.value.length < 3) {
+        input.setCustomValidity('El nombre debe tener almenos 3 caracteres');
+    } else {
+        input.setCustomValidity(''); // Remueve el mensaje de error si es válido
+    }
+}

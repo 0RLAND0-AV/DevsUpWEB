@@ -15,7 +15,7 @@ Detalle del producto
             <div class="form-groupp">
                 <label for="nombre-producto">Nombre del Producto <span class="text-rojo">*</span></label>
                 <input class="form-controll" type="text" id="nombre-producto" name="nombre" value="{{ producto.nombre }}" required disabled 
-                       minlength="3" maxlength="100" placeholder="Ingresa el nombre del producto" 
+                       minlength="3" maxlength="50" placeholder="Ingresa el nombre del producto" 
                        onkeypress="return /^[a-zA-Z\s]*$/.test(event.key)">
                 <div class="invalid-feedback">
                     El nombre del producto debe tener entre 3 y 100 caracteres.
@@ -99,8 +99,10 @@ Detalle del producto
                     <h3>Imágenes</h3>
                     <label id="nuevas-imagenes1" class="nuevas-imagenes1" for="nuevas-imagenes" hidden title="Selecciona imágenes para añadir"> + </label>
                     <input type="file" id="nuevas-imagenes" name="nuevas_imagenes" multiple disabled>
-                    <button type="submit" id="borrar-imagenes1" class="borrar-imagenes1" for="borrar-imagenes" hidden  title="Selecciona imágenes para eliminar"><i class="fa-solid fa-trash"></i> </label>
+                    <button type="submit" id="borrar-imagenes1" class="borrar-imagenes1" for="borrar-imagenes" hidden title="Selecciona imágenes para eliminar"><i class="fa-solid fa-trash"></i></button>
                 </div>
+                <!-- Label que mostrará los nombres de las imágenes seleccionadas -->
+                <label id="mensaje-imagenes-seleccionadas" style="display: none; font-size: 14px; color: #333;"></label>
                 <ul>
                     {% for imagen in producto.imagenes.all %}
                         <li>
@@ -109,8 +111,8 @@ Detalle del producto
                         </li>
                     {% endfor %}
                 </ul>
-                
             </div>
+            
 
             
             <div id="botones-editar" class="botones-editar">

@@ -12,7 +12,7 @@ Perfil
 <!-- Sub Barra de Navegación -->
 <div class="subBarraNanvegacion">
     <div class="filtro-fechas-container">
-        <label for="filtro">Filtro Estado:</label>
+        <label for="filtro">Selecciona un filtro:</label>
         <select id="filtro" name="filtro" onchange="this.form.submit()">
             <option value="todos">Todos los productos</option>
             <option value="activos">Productos activos</option>
@@ -21,7 +21,7 @@ Perfil
     </div>
 
     <div class="filtro-fechas-container">
-        <label for="filtro-fechas">Filtro Orden:</label>
+        <label for="filtro-fechas">Filtro por fechas:</label>
         <select id="filtro-fechas" name="filtro-fechas" onchange="this.form.submit()">
             <option value="ascendente">Fechas Ascendentes</option>
             <option value="descendente">Fechas Descendentes</option>
@@ -41,6 +41,15 @@ Perfil
 
 <!-- Contenedor de Productos -->
 <div class="ContenedorProductos">
+    <p class="MensajeNoEncontrado" id="noResultMessage">
+        No tienes productos. Publica aqui para que se muestren.
+        <a href="{% url 'ofertar' %}" class="boton-publicar">
+            Publicar
+        </a>      
+    </p>
+    <p class="MensajeNoEncontrado" id="noActiveMessage">No tienes productos activos.</p>
+    <p class="MensajeNoEncontrado" id="noInactiveMessage">No tienes productos inactivos.</p>
+
     <div class="product-gridd" id="product-gridd">
         {% for producto in misProductos %}
         <div class="tarjeta-productoo" data-subcategoria-id="{{ producto.subcategoria.id }}">

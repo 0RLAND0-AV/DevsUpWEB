@@ -80,7 +80,7 @@
 .modal-body button {
     background-color:transparent; /* Color de fondo verde */
     text-align: center;
-    color: white;
+    color: var(--white);
     padding: 5px;
     border: none;
     width: 100%;
@@ -170,9 +170,9 @@
 
 
 .CrearCuenta {
-    background-color:var(--tertiary-color); /* Color de fondo verde */
+    background-color:var(--primary-color); /* Color de fondo verde */
     text-align: center;
-    color: white;
+    color: var(--white);
     padding: 5px;
     border: none;
     width: 100%;
@@ -187,7 +187,7 @@
     background-color:var(--secondary-color); /* Color de fondo más oscuro al pasar el ratón */
 }
 .CrearCuenta:active{
-    background-color: var(--primary-color);
+    background-color: var(--tertiary-color);
     
 }
 .BotonCrearCuenta{

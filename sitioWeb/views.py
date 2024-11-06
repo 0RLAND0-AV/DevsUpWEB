@@ -16,16 +16,25 @@ from django.contrib.auth import get_user_model
 
 # Create your views here.
 def baseView(request):
-    '''Esto es la pagina principal'''
+    '''Esto es la página principal'''
         
     user_id = request.session.get('user_id')
     user = None
     if user_id:
         user = Usuario.objects.get(idUsuario=user_id)
-    productos = Producto.objects.filter(estado_producto=True) #solo mostrare los productos que este activos
+        
+    productos = Producto.objects.filter(estado_producto=True)  # solo mostraré los productos que estén activos
     categorias = Categoria.objects.prefetch_related('subcategorias').all()  # Obtiene todas las categorías y sus subcategorías   
     carritos = CarritoProducto.objects.filter(usuario=user)
-    return render(request, "base.html",{'user': user, 'productos': productos, 'categorias': categorias,'carritos': carritos})
+    cantidad_carrito = carritos.count()  # Calcula la cantidad de productos en el carrito
+    
+    return render(request, "base.html", {
+        'user': user,
+        'productos': productos,
+        'categorias': categorias,
+        'carritos': carritos,
+        'cantidad_carrito': cantidad_carrito  # Añade el contador al contexto
+    })
 
 def login_view(request):
     if request.method == 'POST':
@@ -86,6 +95,7 @@ def perfil_view(request):
     
     user = Usuario.objects.get(idUsuario=user_id)
     carritos = CarritoProducto.objects.filter(usuario=user)
+    cantidad_carrito = carritos.count()
 
     if request.method == 'POST':
         # Si hay un archivo de imagen en la solicitud
@@ -106,7 +116,7 @@ def perfil_view(request):
             
         user.save()  # Guarda los cambios en la base de datos
 
-    return render(request, 'perfil.html', {'user': user,'is_profile_page': True,'carritos': carritos})
+    return render(request, 'perfil.html', {'user': user,'is_profile_page': True,'carritos': carritos,'cantidad_carrito': cantidad_carrito})
 
 def logout_request(request):
     logout(request)
@@ -124,6 +134,9 @@ def eliminar_del_carrito(request, producto_id):
             carrito_item = get_object_or_404(CarritoProducto, usuario=user, producto__id=producto_id)
             carrito_item.delete()
             mensaje = f"El producto ha sido eliminado del carrito."
+            
+             # Cantidad de productos en el carrito después de eliminar
+            cantidad_carrito = CarritoProducto.objects.filter(usuario=user).count()
 
             # Recuperar todos los productos en el carrito
             productos_en_carrito = CarritoProducto.objects.filter(usuario=user)
@@ -132,7 +145,8 @@ def eliminar_del_carrito(request, producto_id):
             return JsonResponse({
                 'mensaje': mensaje,
                 'success': True,
-                'productos': lista_productos  # Enviar la lista de productos en el carrito
+                'productos': lista_productos,  # Enviar la lista de productos en el carrito
+                'cantidad_carrito': cantidad_carrito  # Nueva cantidad de productos en el carrito
             })
         except Exception as e:
             return JsonResponse({'mensaje': 'Error al eliminar el producto.', 'success': False}, status=500)
@@ -167,6 +181,8 @@ def agregar_al_carrito(request, producto_id):
             else:
                 mensaje = f"El producto '{producto.nombre}' ya está en tu carrito."
 
+            # Cantidad de productos en el carrito después de agregar
+            cantidad_carrito = CarritoProducto.objects.filter(usuario=user).count()
             # Recuperar todos los productos en el carrito
             productos_en_carrito = CarritoProducto.objects.filter(usuario=user)
             lista_productos = [{'id': item.producto.id, 'nombre': item.producto.nombre, 'precio': int(item.producto.precio)} for item in productos_en_carrito]
@@ -175,7 +191,8 @@ def agregar_al_carrito(request, producto_id):
             return JsonResponse({
                 'mensaje': mensaje,
                 'success': True,
-                'productos': lista_productos  # Enviar la lista de productos en el carrito
+                'productos': lista_productos,  # Enviar la lista de productos en el carrito
+                'cantidad_carrito': cantidad_carrito  # Nueva cantidad de productos en el carrito
             })
 
         except Exception as e:
@@ -204,6 +221,7 @@ def ofertarMView(request):
 
     # Obtener el usuario o lanzar un 404 si no existe
     user = get_object_or_404(Usuario, idUsuario=user_id)
+    cantidad_carrito = carritos.count()
 
     if request.method == 'POST':
         # Obtener los datos del formulario
@@ -246,14 +264,14 @@ def ofertarMView(request):
         return redirect('base')
 
     # Si la solicitud es GET, renderizar el formulario con el usuario
-    return render(request, 'ofertar.html', {'user': user,'is_profile_page': True,'carritos': carritos})
+    return render(request, 'ofertar.html', {'user': user,'is_profile_page': True,'carritos': carritos,'cantidad_carrito': cantidad_carrito})
 
 
 def mis_materiales(request):
     user_id = request.session.get('user_id')
     user = get_object_or_404(Usuario, idUsuario=user_id)
     carritos = CarritoProducto.objects.filter(usuario=user_id)
-
+    cantidad_carrito = carritos.count()
     # Recupera todos los productos del usuario autenticado
     productos = Producto.objects.filter(usuario=user_id)
 
@@ -265,12 +283,13 @@ def mis_materiales(request):
         productos = productos.filter(estado_producto=False)
 
 
-    return render(request, 'productos_usuario.html', {'user': user,'is_profile_page': True,'carritos': carritos,'misProductos': productos})
+    return render(request, 'productos_usuario.html', {'user': user,'is_profile_page': True,'carritos': carritos,'misProductos': productos,'cantidad_carrito': cantidad_carrito})
 
 def detalle_producto(request, producto_id):
     user_id = request.session.get('user_id')
     user = get_object_or_404(Usuario, idUsuario=user_id)
     carritos = CarritoProducto.objects.filter(usuario=user_id)
+    cantidad_carrito = carritos.count()
 
     producto = get_object_or_404(Producto, id=producto_id)
     categorias = Categoria.objects.all()  # Traer todas las categorías
@@ -316,6 +335,7 @@ def detalle_producto(request, producto_id):
         'departamentos': departamentos,
         'provincias': provincias,
         'estados': estados,
+        'cantidad_carrito': cantidad_carrito,
         #'imagenes': producto.imagenes.all(),
     })
 def eliminar_imagenes(request):
