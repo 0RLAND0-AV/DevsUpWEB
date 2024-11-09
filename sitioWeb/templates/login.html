@@ -27,9 +27,12 @@
 
                 <button type="submit">Ingresar</button>
             </form>
-            <div class="CrearCuenta">
-                <a  class="BotonCrearCuenta" href="{% url 'registro' %}" id="createAccount">Crear cuenta</a>
+
+            <div class="CrearCuenta BotonCrearCuenta" onclick="window.location.href='{% url 'registro' %}'" id="createAccount">
+              Crear cuenta
             </div>
+            
         </div>
     </div>
 </div>
+

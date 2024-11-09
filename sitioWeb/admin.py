@@ -20,7 +20,7 @@ class subCategoriaAdmin(admin.ModelAdmin):#lo que se puede editar
 
 @admin.register(Producto)
 class ProductoAdmin(admin.ModelAdmin):
-    fields=["nombre","estado_producto","descripcion","precio","usuario","subcategoria","provincia","estado"]
+    fields=["nombre","estado_producto","descripcion","precio","usuario","subcategoria","provincia","estado","direccion"]
     list_display =["nombre","precio","subcategoria"]
 
 @admin.register(Imagenes)

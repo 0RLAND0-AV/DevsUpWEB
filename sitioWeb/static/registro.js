@@ -1,17 +1,99 @@
-// para activar y desactivar el required
+// Función para activar/desactivar 'required' y mostrar mensajes de error
 
-function toggleRequired(input) {
-    if (input.value.length > 0) {
-        input.setAttribute('required', 'required');
+// Función para validar el nombre de usuario (solo letras, sin números ni caracteres especiales)
+function validateUsername(input) {
+    // Permite solo letras, no números ni caracteres especiales
+    if (input.value.trim() === "") {
+        input.setCustomValidity("Ingresa el nombre de usuario.");
+    } else if (input.value.length < 3) {
+        input.setCustomValidity("El nombre debe tener al menos 3 caracteres.");
+    } else if (/[^A-Za-z]/.test(input.value)) { // Verifica si hay caracteres no permitidos
+        input.setCustomValidity("El nombre de usuario solo debe contener letras.");
     } else {
-        input.removeAttribute('required');
+        input.setCustomValidity(""); // Remueve el mensaje de error si es válido
     }
 }
 
+// Evitar la escritura de números y caracteres especiales en el campo de nombre de usuario
+document.querySelector('input[name="username"]').addEventListener('input', function(event) {
+    // Solo permite letras A-Z y a-z, elimina cualquier número o carácter especial
+    this.value = this.value.replace(/[^A-Za-z]/g, '');
+});
 
-// notificacion cuando las contraseñas no coinciden
+// Función de validación para el correo
+function validateEmail(input) {
+    if (input.value.trim() === "") {
+        input.setCustomValidity("Ingresa el correo electrónico.");
+    } else if (!input.value.includes("@gmail.com")) {
+        input.setCustomValidity("El correo debe contener un '@gmail.com'.");
+    } else {
+        input.setCustomValidity(""); // Remueve el mensaje de error si es válido
+    }
+}
 
+// Función de validación para el teléfono
+function validatePhone(input) {
+    if (input.value.trim() === "") {
+        input.setCustomValidity("Ingresa el número de teléfono.");
+    } else if (input.value.length < 8) {
+        input.setCustomValidity("El número debe tener al menos 8 dígitos.");
+    } else {
+        input.setCustomValidity(""); // Remueve el mensaje de error si es válido
+    }
+}
+
+// Función de validación para la contraseña
+function validatePassword(input) {
+    if (input.value.trim() === "") {
+        input.setCustomValidity("Ingresa una contraseña.");
+    } else if (input.value.length < 5) {
+        input.setCustomValidity("La contraseña debe tener al menos 5 caracteres.");
+    } else {
+        input.setCustomValidity(""); // Remueve el mensaje de error si es válido
+    }
+}
+
+// Función de validación para la confirmación de contraseña
+function validateConfirmPassword(input, passwordField) {
+    if (input.value.trim() === "") {
+        input.setCustomValidity("Ingresa la confirmación de la contraseña.");
+    } else if (input.value !== passwordField.value) {
+        input.setCustomValidity("Las contraseñas no coinciden.");
+    } else {
+        input.setCustomValidity(""); // Remueve el mensaje de error si es válido
+    }
+}
+
+// Añadir eventos de validación a los campos
 document.addEventListener('DOMContentLoaded', function() {
+    const usernameField = document.querySelector('input[name="username"]');
+    const emailField = document.querySelector('input[name="email"]');
+    const phoneField = document.querySelector('input[name="NumTelefono"]');
+    const passwordField = document.querySelector('input[name="password"]');
+    const confirmPasswordField = document.querySelector('input[name="confirmPassword"]');
+
+    // Validar al escribir en los campos
+    usernameField.addEventListener('input', function() {
+        validateUsername(usernameField);
+    });
+
+    emailField.addEventListener('input', function() {
+        validateEmail(emailField);
+    });
+
+    phoneField.addEventListener('input', function() {
+        validatePhone(phoneField);
+    });
+
+    passwordField.addEventListener('input', function() {
+        validatePassword(passwordField);
+    });
+
+    confirmPasswordField.addEventListener('input', function() {
+        validateConfirmPassword(confirmPasswordField, passwordField);
+    });
+
+    // Notificación cuando las contraseñas no coinciden
     const toasts = document.querySelectorAll('.toast');
     toasts.forEach(toast => {
         toast.classList.add('show'); // Muestra la notificación
@@ -22,18 +104,3 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 3000);
     });
 });
-
-
-
-// controla en tiempo real el ingreso de SOLO letras en el input de nombre
-function validateUsername(input) {
-    // Permite solo letras y al menos 3 caracteres
-    input.value = input.value.replace(/[^A-Za-z]/g, ''); // Remueve caracteres no permitidos
-
-    // Si tiene menos de 3 caracteres, muestra el mensaje de error
-    if (input.value.length < 3) {
-        input.setCustomValidity('El nombre debe tener almenos 3 caracteres');
-    } else {
-        input.setCustomValidity(''); // Remueve el mensaje de error si es válido
-    }
-}

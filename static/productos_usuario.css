@@ -1,13 +1,13 @@
 .subBarraNanvegacion {
     position: fixed;
-    top: 12%;
+    top: 11%;
     left: 0;
     background: var(--primary-color);
     z-index: 1;
     font-size: 12px;
     display: flex;
     align-items: center;
-    gap: 110px;
+    gap: 10px;
     padding: 2px;
     background-color: var(--secondary-color);
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
@@ -15,12 +15,25 @@
     color: var(--white);
 }
 
+
 .filtro-fechas-container {
     padding-top:0;
     display: flex;
     align-items: center; /* Alinea verticalmente en el centro */
     gap: 8px; /* Espacio entre label y select */
     margin-left: 170px;
+    padding-right: 100px;
+    width: 60px;
+    flex: 1;
+}
+.filtro-fechas-containerr {
+    padding-top:0;
+    display: flex;
+    align-items: center; /* Alinea verticalmente en el centro */
+    gap: 8px; /* Espacio entre label y select */
+    margin-left: 20px;
+    padding-right: 20px;
+    width: 60px;
     flex: 1;
 }
 
@@ -77,46 +90,56 @@
 
 .eliminar-container {
     display: flex;
+    padding-right: 130px;
+    justify-content: space-between;
     align-items: center;
     gap: 10px;
     margin-left: auto;
 }
 
-.checkbox-burbuja input {
+.eliminar-container .checkbox-burbuja input {
     display: none;
+    
+}
+.checkbox-burbuja{
+    order:-1;
+}
+.filtro-fechas{
+    order:1;
 }
 
-.checkbox-burbuja span {
-    width: 25px;
-    height: 25px;
+.eliminar-container .checkbox-burbuja span {
+    
+    width: 15px;
+    height: 15px;
     background: #eee;
     display: inline-block;
-    border-radius: 50%;
+    border-radius: 0;
     transition: all 0.3s ease;
     position: relative;
     cursor: pointer;
     box-shadow: 2px 2px 5px 2px var(--secondary-color);
 }
 
-.checkbox-burbuja input:checked + span {
+.eliminar-container .checkbox-burbuja input:checked + span {
     background-color: var(--eliminarColor);
 }
 
-.checkbox-burbuja span:after {
+.eliminar-container .checkbox-burbuja span:after {
     content: "";
     position: absolute;
     display: none;
     top: 50%;
     left: 50%;
-    width: 12px;
-    height: 12px;
+    width: 2px;
+    height: 2px;
     background: var(--white);
-    border-radius: 50%;
+    border-radius: 0;
     transform: translate(-50%, -50%) scale(0);
     transition: transform 0.3s ease;
 }
 
-.checkbox-burbuja input:checked + span:after {
+.eliminar-container .checkbox-burbuja input:checked + span:after {
     display: block;
     transform: translate(-50%, -50%) scale(1);
 }
@@ -126,6 +149,7 @@
     .subBarraNanvegacion {
         padding: 5px 10px;
         font-size: 11px;
+        
     }
 
     .filtro-fechas-container {
@@ -141,6 +165,7 @@
     .subBarraNanvegacion {
         gap: 10px;
         padding: 5px;
+        margin-top: 75px;
     }
 
     .filtro-fechas-container {
@@ -150,6 +175,16 @@
     #eliminarSeleccionados {
         padding: 5px 8px;
         font-size: 11px;
+    }
+    .eliminar-container {
+        display: flex;
+        padding-right: 10px;
+        align-items: center;
+        gap: 10px;
+        margin-left: auto;
+    }
+    #eliminarSeleccionados {
+        padding: 4px 3px;
     }
 }
 
@@ -175,11 +210,12 @@
 /* ---------------------------------------------------*/
 /* Contenedor principal de productos */
 .ContenedorProductos{
-    position: absolute;
+    position: relative;
     top: 10%;
     left: 13%;
     width: 85%;
     margin-bottom: 10%;
+    margin-top: 110px;
 }
 .product-gridd {
     width: 100%;
@@ -298,13 +334,28 @@
 }
 
 /* Nombre del producto */
-.nombre-productoo {
-    font-size: 14px;
-    font-weight: bold;
+.nombre-productoo h3{
+    font-size: 1.2rem;
     margin: 3px 0;
     text-align: center;
     color:var(--secondary-color);
     text-decoration: none;
+}
+/*.nombre-productoo h3 {
+    font-size: 1.2rem; /* Ajusta el tamaño de la fuente según tus necesidades */
+   /* margin: 0; /* Elimina los márgenes predeterminados */
+   /* text-align: center; /* Mantiene la alineación centrada, puedes cambiarla si lo deseas */
+  /*  color: var(--secondary-color); /* Mantiene el color definido */
+/*    text-decoration: none; /* Quita cualquier subrayado 
+
+}*/
+.tarjeta-productoo h3 {
+    text-align: center;
+    color: #02735e;
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+    overflow: hidden; /* Oculta el contenido que excede */
+    text-overflow: ellipsis; /* Muestra "..." si hay un desbordamiento */
 }
 
 /* Subcategoría del producto */
@@ -353,7 +404,7 @@
     color: var(--white);
     font-weight: bold;
     text-align: center;
-    cursor: pointer;
+    cursor: default;
     outline: none;
     display: inline-block;
     transition: background-color 0.3s ease;
@@ -430,6 +481,9 @@
 
 /* Responsividad */
 @media (max-width: 600px) {
+    .ContenedorProductos{
+        margin-top: 5rem;
+    }
     .productos-contenedor {
         grid-template-columns: 1fr;
     }

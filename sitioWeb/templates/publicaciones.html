@@ -8,14 +8,27 @@
         <div class="product-card" data-subcategoria-id="{{ producto.subcategoria.id }}">
             <img src="{{ producto.imagenes.first.ruta.url }}" alt="{{ producto.nombre }}">
             <h3>{{ producto.nombre }}</h3>
-            <h2>{{ producto.subcategoria.nombre }}</h2>
-            <p>{{ producto.descripcion }}</p>
+            <h2>{{ producto.subcategoria.nombre }}</h2>            
+            <p class="description" onclick="showModal('{{ producto.descripcion }}')">
+                {{ producto.descripcion }}
+            </p>
             <span class="precio">{{ producto.precio }} Bs</span>
             <button class="agregar-button" data-id="{{ producto.id }}">Agregar al carrito</button>
         </div>
         {% empty %}
         <p>No hay productos disponibles en este momento.</p>
         {% endfor %}
+        <div class="modal-container">
+            <div class="modal" id="modal">
+                <div class="modal-content">
+                    <span class="close" onclick="closeModal()">&times;</span>
+                    <p id="modal-text"></p>
+                </div>
+            </div>
+        </div>
+        
     </div>
     
 </section>
+
+<script src="{% static 'publicaciones.js' %}"></script>

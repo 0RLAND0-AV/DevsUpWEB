@@ -195,3 +195,35 @@
     color: var(--white);
     background-color: transparent;
 }
+
+
+.messages {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1000;
+    max-width: 300px;
+    text-align: center;
+}
+
+.alert {
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    color: white;
+    font-size: 16px;
+}
+
+/* para definir el color de los mensajes flotantes al momento de logearse */
+.alert.success {
+    background-color: var(--primary-color); /* Color verde para mensajes de éxito */
+}
+
+.alert.error {
+    background-color: var(--tertiary-color); /* Color rojo para mensajes de error */
+}
+
+.alert.info {
+    background-color: #2196F3; /* Color azul para mensajes de información */
+}

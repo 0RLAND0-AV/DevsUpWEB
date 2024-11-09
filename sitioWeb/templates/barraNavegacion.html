@@ -17,20 +17,22 @@
          <!-- Botón del carrito -->
          <div class="dropdown">
             <button class="dropbtn">Carrito <span id="carrito-contador">{{ cantidad_carrito }}</span></button> <!-- El número inicial es solo para mostrar el formato -->
-            <div class="cart-popup" id="cart-popup">
-                <h3>Carrito de Compras</h3>
-                {% if carritos %}
-                    {% for item in carritos %}
-                    <div class="cart-item" id="cartItems" data-precio="{{ item.producto.precio }}">
-                        <span>{{ item.producto.nombre }} - {{ item.producto.precio|floatformat:2 }} bs </span>
-                        <button class="remove-from-cart" data-id="{{ item.producto.id }}">Eliminar</button>
-                    </div>
-                    {% endfor %}
-                    <p class="cart-total">Total: <strong id="cart-total">0.00</strong> bs</p>
-                {% else %}
-                    <p>No hay productos en el carrito.</p>
-                {% endif %}
-            </div>
+            {% if request.session.user_id %}
+                <div class="cart-popup" id="cart-popup">
+                    <h3>Carrito de Compras</h3>
+                    {% if carritos %}
+                        {% for item in carritos %}
+                        <div class="cart-item" id="cartItems" data-precio="{{ item.producto.precio }}">
+                            <span>{{ item.producto.nombre }} - {{ item.producto.precio|floatformat:2 }} bs </span>
+                            <button class="remove-from-cart" data-id="{{ item.producto.id }}">Eliminar</button>
+                        </div>
+                        {% endfor %}
+                        <p class="cart-total">Total: <strong id="cart-total">0.00</strong> bs</p>
+                    {% else %}
+                        <p>No hay productos en el carrito.</p>
+                    {% endif %}
+                </div>
+            {% endif %}
         </div>        
 
                 <!--<a href=# class="nav-link">Iniciar Sesion</a>-->

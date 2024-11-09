@@ -20,7 +20,7 @@ Perfil
         </select>
     </div>
 
-    <div class="filtro-fechas-container">
+    <div class="filtro-fechas-containerr">
         <label for="filtro-fechas">Filtro por fechas:</label>
         <select id="filtro-fechas" name="filtro-fechas" onchange="this.form.submit()">
             <option value="ascendente">Fechas Ascendentes</option>
@@ -65,22 +65,21 @@ Perfil
             </a>
 
             <a class="nombre-productoo" href="{% url 'detalle_producto' producto.id %}">
-                <h3>{{ producto.nombre }}</h3>
             </a>
-
+            <h3>{{ producto.nombre }}</h3>
             <h4 class="subcategoria-productoo">{{ producto.subcategoria.nombre }}</h4>
             <div class="ContenedorDescripcion">
                 <p class="descripcion-productoo">{{ producto.descripcion }}</p>
             </div>
             <span class="precio-productoo">{{ producto.precio }} Bs</span>
 
-            <button class="boton-estado {% if producto.estado_producto %}activo{% else %}inactivo{% endif %}">
+            <span class="boton-estado {% if producto.estado_producto %}activo{% else %}inactivo{% endif %}">
                 {% if producto.estado_producto %}
                     Activo
                 {% else %}
                     Inactivo
                 {% endif %}
-            </button>
+            </span>
             <div class="fecha-publicacion"> 
                 <p class="fecha-publicacionn">
                     Publicado el: {{ producto.fecha_creacion|date:"d/m/Y H:i" }}

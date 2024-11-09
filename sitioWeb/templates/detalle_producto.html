@@ -82,6 +82,13 @@ Detalle del producto
                 {% endfor %}
             </select>
 
+            <div class="form-groupp">
+                <label for="direccion-producto">Dirección</label>
+                <input class="form-controll" type="text" id="direccion-producto" name="direccion" 
+                       value="{{ producto.direccion }}" disabled placeholder="Ingresa la dirección">
+            </div>            
+
+
             <label for="estado-producto">Estado del Producto:</label>
             <select id="estado-producto" name="estado" disabled>
                 {% for estado in estados %}

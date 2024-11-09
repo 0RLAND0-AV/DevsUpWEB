@@ -1,4 +1,3 @@
-
 // Habilitar los campos para editar el producto
 document.getElementById('editar-producto').addEventListener('click', function() {
     // Verificar si el botón está siendo clickeado correctamente
@@ -250,15 +249,61 @@ function getCookie(name) {
     }
     return cookieValue;
 }
+//Alerta al clickear el boton guardar cambios
+document.getElementById('boton-guardar-producto').addEventListener('click', function(event) {
+    event.preventDefault(); // Previene la acción por defecto del botón, si se requiere
 
+    // Muestra el SweetAlert de confirmación de guardado
+    Swal.fire({
+        title: '¡Cambios Guardados!',
+        text: 'Tus cambios fueron guardados correctamente.',
+        icon: 'success',
+        confirmButtonText: 'Aceptar',
+        confirmButtonColor: getComputedStyle(document.documentElement).getPropertyValue('--primary-color'),
+        timer: 1500, // La alerta se cierra automáticamente después de 3 segundos
+        timerProgressBar: true
+    }).then((result) => {
+        // Recarga la página después de que el usuario confirme o pase el tiempo
+        if (result.isConfirmed || result.dismiss === Swal.DismissReason.timer) {
+            window.location.reload();
+        }
+    });
+});
+
+//Alerta al clcikear el boton eliminar
 document.getElementById('eliminar-producto').addEventListener('click', function() {
     var url = this.getAttribute('data-url'); // Obtiene la URL del atributo data-url
 
-    if (confirm('¿Estás seguro de que deseas eliminar este producto?')) {
-        console.log('Eliminando producto...');
-
-        window.location.href = url; // Redirige a la URL de eliminación
-    }
+    // Muestra el SweetAlert de confirmación con colores personalizados
+    Swal.fire({
+        title: '¿Estás seguro?',
+        text: "¿Estás seguro de que deseas eliminar este producto?",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: getComputedStyle(document.documentElement).getPropertyValue('--eliminarColor'),
+        cancelButtonColor: getComputedStyle(document.documentElement).getPropertyValue('--cancelarColor'),
+        confirmButtonText: 'Sí, eliminar',
+        cancelButtonText: 'Cancelar',
+        didOpen: () => {
+            const confirmButton = Swal.getConfirmButton();
+            const cancelButton = Swal.getCancelButton();
+            confirmButton.addEventListener('mouseenter', () => confirmButton.style.backgroundColor = getComputedStyle(document.documentElement).getPropertyValue('--eliminarHover'));
+            confirmButton.addEventListener('mouseleave', () => confirmButton.style.backgroundColor = getComputedStyle(document.documentElement).getPropertyValue('--eliminarColor'));
+            cancelButton.addEventListener('mouseenter', () => cancelButton.style.backgroundColor = getComputedStyle(document.documentElement).getPropertyValue('--cancelarHover'));
+            cancelButton.addEventListener('mouseleave', () => cancelButton.style.backgroundColor = getComputedStyle(document.documentElement).getPropertyValue('--cancelarColor'));
+        },
+        preConfirm: () => {
+            Swal.getConfirmButton().style.backgroundColor = getComputedStyle(document.documentElement).getPropertyValue('--eliminarActive');
+        },
+        preDeny: () => {
+            Swal.getCancelButton().style.backgroundColor = getComputedStyle(document.documentElement).getPropertyValue('--cancelarActive');
+        }
+    }).then((result) => {
+        if (result.isConfirmed) {
+            console.log('Eliminando producto...');
+            window.location.href = url; // Redirige a la URL de eliminación
+        }
+    });
 });
 
 

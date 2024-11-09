@@ -96,6 +96,8 @@ class Producto(models.Model):
     fecha_creacion = models.DateTimeField(auto_now_add=True)  # Fecha y hora de creación del producto
     estado_producto = models.BooleanField(default=True,null=True, blank=True)  # Estado del producto (activo o inactivo)
 
+    direccion = models.CharField(max_length=255, null=True, blank=True)  # Nueva dirección
+
     class Meta:
         db_table = "Productos"
         verbose_name = "Producto"
