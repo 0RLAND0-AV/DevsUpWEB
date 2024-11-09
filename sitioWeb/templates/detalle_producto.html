@@ -14,18 +14,29 @@ Detalle del producto
 
             <div class="form-groupp">
                 <label for="nombre-producto">Nombre del Producto <span class="text-rojo">*</span></label>
-                <input class="form-controll" type="text" id="nombre-producto" name="nombre" value="{{ producto.nombre }}" required disabled 
-                       minlength="3" maxlength="50" placeholder="Ingresa el nombre del producto" 
-                       onkeypress="return /^[a-zA-Z\s]*$/.test(event.key)">
+                <input class="form-controll" type="text" maxlength="20" id="nombre-producto" name="nombre" value="{{ producto.nombre }}" required disabled 
+                pattern="^(?!.*([a-zA-Z])\1{3})(?=(.*[a-zA-Z]){3,})(?=.*[0-9]?)[a-zA-Z0-9\s]*$"
+                title="Debes incluir al menos 3 letras y un máximo de 6 números (opcional)." 
+                onkeypress="return /^[a-zA-Z0-9\s]*$/.test(event.key)" 
+                oninput="this.value = this.value.replace(/[^a-zA-Z0-9\s]/g, '');
+                        const numberCount = (this.value.match(/[0-9]/g) || []).length;
+                        if (numberCount > 10) {
+                            // Encuentra el índice del decimo número....
+                            const seventhNumberIndex = this.value.indexOf('11', 10);
+                            // bloquea los numeros si hay mas de 10
+                            this.value = this.value.slice(0, seventhNumberIndex);
+                        }" />
                 <div class="invalid-feedback">
-                    El nombre del producto debe tener entre 3 y 100 caracteres.
+                    El nombre del producto debe tener minimo 3 letras sin repetir continuamente y un maximo de 20 caracteres.
                 </div>
             </div>
             
             <div class="form-groupp">
                 <label for="descripcion-producto">Descripción <span class="text-rojo">*</span></label>
-                <textarea class="form-controll" id="descripcion-producto" name="descripcion" required disabled 
-                          minlength="15" maxlength="200" placeholder="Añade una descripción...">{{ producto.descripcion }}</textarea>
+                <textarea class="form-controll" id="descripcion-producto" name="descripcion" required disabled placeholder="Añade una descripción..."
+                pattern="^(?!.*([a-zA-Z])\1{4})(?=.*[a-zA-Z].{14,}).*$"
+                onkeypress="return /^[a-zA-Z0-9\s/:?&.=]/i.test(event.key)"
+                rows="2" minlength="15" maxlength="250">{{ producto.descripcion }}</textarea>
                 <div class="invalid-feedback">
                     La descripción debe tener entre 15 y 200 caracteres.
                 </div>
@@ -84,8 +95,22 @@ Detalle del producto
 
             <div class="form-groupp">
                 <label for="direccion-producto">Dirección</label>
-                <input class="form-controll" type="text" id="direccion-producto" name="direccion" 
-                       value="{{ producto.direccion }}" disabled placeholder="Ingresa la dirección">
+                <input class="form-controll" type="text" required id="direccion-producto" name="direccion" 
+                    value="{{ producto.direccion }}" disabled placeholder="Ingresa la dirección"
+                    maxlength="100"
+                    pattern="^(?!.*([a-zA-Z])\1{3})(?=.*[a-zA-Z].{14,}).*$"
+                    title="Debe incluir al menos 15 letras y un máximo de 15 dígitos seguidos (se permiten más números si hay un símbolo válido después de 15 dígitos)."
+                    onkeypress="return /^[a-zA-Z0-9\s/:?&.=]/i.test(event.key)"
+                    
+                    oninput="this.value = this.value.replace(/[^a-zA-Z0-9\s/:?&.=]/g, ''); 
+                                const AnumberCount = (this.value.match(/[0-9]/g) || []).length; 
+                                this.value = this.value.replace(/(?:[0-9]*?)([0-9]{15})[0-9]*/, '$1'); 
+                                if (AnumberCount > 20) { 
+                                    this.value = this.value.replace(/(\d{20})(.*)/, '$1'); 
+                                }" />
+                    <div class="invalid-feedback">
+                        Completa este campo porfavor, minimo 15 letras y no puede haber 3 letras iguales repetidas continuamente.
+                    </div>   
             </div>            
 
 

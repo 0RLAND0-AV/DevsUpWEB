@@ -45,6 +45,14 @@ document.getElementById('boton-cancelar-producto').addEventListener('click', fun
 });
 
 //--------------------------------------------------------------------------------------
+//Controla que el precio no se baje con scroll
+document.addEventListener('DOMContentLoaded', function() {
+    // Desactivar el scroll en el campo precio
+    document.getElementById('precio-producto').addEventListener('wheel', function(e) {
+        e.preventDefault(); // Esto evita que el scroll cambie el valor
+    });
+});
+
 
 function manejarRestriccionesDeImagenes() {
     const inputImagenes = document.getElementById('nuevas-imagenes');
@@ -249,26 +257,44 @@ function getCookie(name) {
     }
     return cookieValue;
 }
-//Alerta al clickear el boton guardar cambios
+// Al hacer clic en el botón de guardar cambios
 document.getElementById('boton-guardar-producto').addEventListener('click', function(event) {
-    event.preventDefault(); // Previene la acción por defecto del botón, si se requiere
+    const formulario = document.getElementById('producto-formulario');
+    let yaSeDesplazo = false; // Control de si ya se hizo el scroll
 
-    // Muestra el SweetAlert de confirmación de guardado
-    Swal.fire({
-        title: '¡Cambios Guardados!',
-        text: 'Tus cambios fueron guardados correctamente.',
-        icon: 'success',
-        confirmButtonText: 'Aceptar',
-        confirmButtonColor: getComputedStyle(document.documentElement).getPropertyValue('--primary-color'),
-        timer: 1500, // La alerta se cierra automáticamente después de 3 segundos
-        timerProgressBar: true
-    }).then((result) => {
-        // Recarga la página después de que el usuario confirme o pase el tiempo
-        if (result.isConfirmed || result.dismiss === Swal.DismissReason.timer) {
-            window.location.reload();
+    // Primero, verifica si el formulario es válido según las validaciones HTML
+    if (!formulario.checkValidity()) {
+        // Si no es válido, evita el comportamiento por defecto (no se envía)
+        event.preventDefault();
+
+        // Buscar el primer campo inválido
+        const campoInvalido = formulario.querySelector(':invalid');
+        if (campoInvalido && !yaSeDesplazo) {
+            // Desplazar hacia el primer campo inválido solo si no se ha hecho scroll previamente
+            campoInvalido.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            yaSeDesplazo = true; // Marcar que ya se hizo el scroll
         }
-    });
+
+        
+
+    } else {
+        // Si el formulario es válido, mostrar la alerta de confirmación de guardado
+        event.preventDefault(); // Evita el envío inmediato
+
+        Swal.fire({
+            title: '¡Cambios Guardados!',
+            text: 'Tus cambios fueron guardados correctamente.',
+            icon: 'success',
+            showConfirmButton: false, // Quita el botón de "Aceptar"
+            timer: 1250, // La alerta se cierra automáticamente después de 1.25 segundos
+            timerProgressBar: true
+        }).then(() => {
+            // Luego de la alerta, enviar el formulario manualmente
+            formulario.submit(); // Aquí se ejecuta el envío del formulario
+        });
+    }
 });
+
 
 //Alerta al clcikear el boton eliminar
 document.getElementById('eliminar-producto').addEventListener('click', function() {

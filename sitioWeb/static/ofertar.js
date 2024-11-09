@@ -16,7 +16,7 @@
                 Swal.fire({
                     icon: 'error',
                     title: 'Formulario incompleto',
-                    text: 'Por favor, completa todos los campos requeridos y selecciona archivos válidos antes de ofertar.',
+                    text: 'Por favor, completa todos los campos requeridos con datos validos y selecciona archivos válidos antes de ofertar.',
                     confirmButtonText: 'Entendido',
                     confirmButtonColor: '#02735E' // Color verde
                 });
@@ -115,11 +115,12 @@ const validarFormulario = (event) => {
     event.preventDefault(); // Prevenir el envío del formulario
     // Si todo está completo, mostrar la alerta de éxito y retrasar el envío del formulario
     Swal.fire({
-        position: "top-end",
-        icon: "success",
-        title: "Tu oferta fue publicada correctamente",
-        showConfirmButton: false,
-        timer: 1750 // 1.75 segundos
+        title: '¡Tu oferta fue publicada correctamente!',
+        //text: 'Tus cambios fueron guardados correctamente.',
+        icon: 'success',
+        showConfirmButton: false, // Quita el botón de "Aceptar"
+      //  timer: 1250, // La alerta se cierra automáticamente después de 1.5 segundos
+       // timerProgressBar: true
     });
 
     setTimeout(() => {

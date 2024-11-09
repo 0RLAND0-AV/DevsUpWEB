@@ -15,7 +15,7 @@
         <!-- Campo para el título del producto -->
         <div class="form-group">
             <label for="titulo">Título del Producto <span class="text-rojo">*</span></label>
-            <input class="form-control"  maxlength="50" type="text" name="titulo" id="titulo" placeholder="Ingresa el título del producto" required autocomplete="off"
+            <input class="form-control"  maxlength="20" type="text" name="titulo" id="titulo" placeholder="Ingresa el título del producto" required autocomplete="off"
                 pattern="^(?!.*([a-zA-Z])\1{3})(?=(.*[a-zA-Z]){3,})(?=.*[0-9]?)[a-zA-Z0-9\s]*$"
                 title="Debes incluir al menos 3 letras y un máximo de 6 números (opcional)." 
                 onkeypress="return /^[a-zA-Z0-9\s]*$/.test(event.key)" 
@@ -28,7 +28,7 @@
                             this.value = this.value.slice(0, seventhNumberIndex);
                         }" />
             <div class="invalid-feedback">
-                Completa este campo por favor, mínimo 3 letras, no puede haber 3 letras iguales repetidas continuamente.
+                Completa este campo por favor, mínimo 3 letras, no puede haber mas de 3 letras iguales repetidas continuamente.
             </div>
         </div>
         
@@ -161,12 +161,10 @@
             </div>
         </div>
 
-        
-
         <div class="checkbox-container">
             <input type="checkbox" class="form-check-input" id="validationFormCheck1" required>
             <label class="form-check-label" for="validationFormCheck1">Acepto las Condiciones del servicio y la Política de Privacidad</label>
-          </div>
+        </div>
 
         <div class="button-group-ofertar">
             <button type="submit" class="btn btn-primary" id="button-ofertar" >Ofertar</button>

@@ -272,7 +272,7 @@ def ofertarMView(request):
             imagen = Imagenes(ruta=archivo, producto=producto)
             imagen.save()
 
-        messages.success(request, '¡Oferta creada exitosamente!')
+        #messages.success(request, '¡Oferta creada exitosamente!')
         return redirect('base')
 
     # Si la solicitud es GET, renderizar el formulario con el usuario
