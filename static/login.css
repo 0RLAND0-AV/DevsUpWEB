@@ -168,34 +168,39 @@
   
   /* Estilos para el botón de crear cuenta */
 
+  .Btn_Registro_Y_Admin {
+    display: flex; /* Usa Flexbox para alinear los elementos en una fila */
+    gap: 10px; /* Añade un espacio entre los botones (opcional) */
+}
 
-.CrearCuenta {
-    background-color:var(--primary-color); /* Color de fondo verde */
-    text-align: center;
-    color: var(--white);
-    padding: 5px;
+.RegistroUsuario {
+    padding: 8px 16px; /* Ajusta el tamaño de los botones */
+    background-color: transparent; /* Color de fondo naranja */
+    box-shadow: 2px 2px 5px 2px var(--secondary-color);
+    color: white; /* Color de texto blanco */
     border: none;
-    width: 100%;
-    border-radius: 4px;
     cursor: pointer;
-    transition: all 0.1s;
+    text-align: center;
+    border-radius: 5px; /* Bordes redondeados */
+    transition: background-color 0.3s ease; /* Transición suave en el cambio de color */
+}
+.RegistroUsuario:hover{
+    background-color: var(--secondary-color);
+}
+.EntrarAdmin {
+    padding: 8px 18px; /* Ajusta el tamaño de los botones */
+    background-color: var(--secondary-color); /* Color de fondo naranja */
     box-shadow: 2px 2px 5px 2px var(--secondary-color);
+    color: white; /* Color de texto blanco */
+    border: none;
+    cursor: pointer;
+    text-align: center;
+    border-radius: 5px; /* Bordes redondeados */
+    transition: background-color 0.3s ease; /* Transición suave en el cambio de color */
 }
-
-.CrearCuenta:hover {
-    box-shadow: 2px 2px 5px 2px var(--secondary-color);
-    background-color:var(--secondary-color); /* Color de fondo más oscuro al pasar el ratón */
+.EntrarAdmin:hover {
+    background-color: #FF8C00; /* Color más oscuro cuando pasas el mouse por encima */
 }
-.CrearCuenta:active{
-    background-color: var(--tertiary-color);
-    
-}
-.BotonCrearCuenta{
-    text-decoration: none;
-    color: var(--white);
-    background-color: transparent;
-}
-
 
 .messages {
     position: fixed;

@@ -32,18 +32,6 @@ document.getElementById('editar-producto').addEventListener('click', function() 
     // ocultar el botón de eliminar
     document.getElementById("eliminar-producto").hidden = true; // Corrección aquí
 });
-
-// Escuchar el clic en el botón de cancelar
-document.getElementById('boton-cancelar-producto').addEventListener('click', function(event) {
-    event.preventDefault(); // Evita que el formulario se restablezca de inmediato
-
-    // Retrasar la recarga de la página 200 ms
-    setTimeout(() => {
-        // Recargar la página
-        location.reload();
-    }, 200);
-});
-
 //--------------------------------------------------------------------------------------
 //Controla que el precio no se baje con scroll
 document.addEventListener('DOMContentLoaded', function() {
@@ -52,7 +40,6 @@ document.addEventListener('DOMContentLoaded', function() {
         e.preventDefault(); // Esto evita que el scroll cambie el valor
     });
 });
-
 
 function manejarRestriccionesDeImagenes() {
     const inputImagenes = document.getElementById('nuevas-imagenes');
@@ -176,72 +163,6 @@ document.getElementById('departamento-producto').addEventListener('change', func
         });
 });
 
-//Funcionalidad del eliminar imagenes seleccionadas
-document.getElementById('borrar-imagenes1').addEventListener('click', function(event) {
-    event.preventDefault(); // Evita el envío predeterminado del formulario
-
-    // Obtener los IDs de los checkboxes seleccionados
-    const selectedImages = Array.from(document.querySelectorAll('input[name="imagenes_a_eliminar"]:checked'))
-                                .map(checkbox => checkbox.value);
-
-    if (selectedImages.length === 0) {
-        Swal.fire({
-            icon: 'warning',
-            title: 'Selecciona al menos 1 imagen ',
-            text: 'Por favor marca en el cuadrito las imagenes que quieres eliminar',
-            confirmButtonText: 'OK',
-            confirmButtonColor: '#02735E' // Color verde
-        })
-        return;
-    }
-
-    // Confirmación de eliminación
-    Swal.fire({
-        title: "¿Estás seguro?",
-        text: "¡Las imágenes seleccionadas se eliminarán permanentemente!",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#666666",
-        cancelButtonColor: "#d33",
-        confirmButtonText: "Aceptar",
-        cancelButtonText: "Cancelar"
-    }).then((result) => {
-        if (result.isConfirmed) {
-            // Crear el cuerpo de la solicitud con múltiples entradas de 'imagenes_a_eliminar'
-            const formData = new URLSearchParams();
-            selectedImages.forEach(id => formData.append('imagenes_a_eliminar', id));
-
-            // Realizar la solicitud AJAX
-            fetch('/eliminar-imagenes/', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                    'X-CSRFToken': getCookie('csrftoken') // Agrega el CSRF token
-                },
-                body: formData
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.status === 'success') {
-                    Swal.fire({
-                        title: "¡Recuerda Guardar tus cambios!",
-                        icon: "success",
-                        confirmButtonColor: "#03A678"
-                    }).then(() => {
-                        // Aquí puedes actualizar el DOM para reflejar la eliminación sin recargar
-                        selectedImages.forEach(id => {
-                            document.querySelector(`input[value="${id}"]`).closest('li').remove();
-                        });
-                    });
-                } else {
-                    Swal.fire("Error", data.message, "error");
-                }
-            })
-            .catch(error => console.error('Error en la solicitud:', error));
-        }
-    });
-});
-
 // Función para obtener el CSRF token desde las cookies
 function getCookie(name) {
     let cookieValue = null;
@@ -257,44 +178,148 @@ function getCookie(name) {
     }
     return cookieValue;
 }
+
+let ajaxInProgress = false; // Control para saber si la solicitud AJAX está en progreso
+
+// Funcionalidad del eliminar imágenes seleccionadas
+document.getElementById('borrar-imagenes1').addEventListener('click', function(event) {
+    event.preventDefault(); // Evita el envío predeterminado del formulario
+
+    // Obtener los IDs de los checkboxes seleccionados
+    const selectedImages = Array.from(document.querySelectorAll('input[name="imagenes_a_eliminar"]:checked'))
+                                .map(checkbox => checkbox.value);
+
+    if (selectedImages.length === 0) {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Selecciona al menos 1 imagen',
+            text: 'Por favor marca en el cuadrito las imágenes que quieres eliminar',
+            confirmButtonText: 'OK',
+            confirmButtonColor: '#02735E' // Color verde
+        });
+        return;
+    }
+
+    // Ocultar temporalmente las imágenes seleccionadas (con checkbox tiqueado)
+    selectedImages.forEach(id => {
+        const liElement = document.querySelector(`input[value="${id}"]`).closest('li');
+        if (liElement) {
+            liElement.style.display = 'none'; // Oculta el <li> con la imagen
+        }
+    });
+
+    // Confirmación de eliminación
+    Swal.fire({
+        title: "¿Estás seguro?",
+        text: "¡Las imágenes seleccionadas se eliminarán permanentemente!",
+        icon: "warning",
+        showCancelButton: false,
+        confirmButtonColor: "#666666",
+        //cancelButtonColor: "#d33",
+        confirmButtonText: "Aceptar",
+        //cancelButtonText: "Cancelar"
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // Suspender la solicitud AJAX hasta que se haga clic en el botón "Guardar"
+            ajaxInProgress = true;
+
+            // Aquí puedes realizar otras acciones si es necesario, o mostrar un mensaje
+            Swal.fire({
+                icon: 'info',
+                title: 'Eliminación pendiente',
+                text: 'Las imágenes seleccionadas se eliminarán cuando guardes tus cambios. ¡No olvides guardar!',                
+                showConfirmButton: false,
+                timer: 1800,
+                timerProgressBar: true
+            });
+
+        } else {
+            // Si el usuario cancela, volver a mostrar las imágenes
+            selectedImages.forEach(id => {
+                const liElement = document.querySelector(`input[value="${id}"]`).closest('li');
+                if (liElement) {
+                    liElement.style.display = ''; // Muestra el <li> con la imagen
+                }
+            });
+        }
+    });
+});
+
 // Al hacer clic en el botón de guardar cambios
 document.getElementById('boton-guardar-producto').addEventListener('click', function(event) {
+    event.preventDefault(); // Evita el envío predeterminado del formulario
+
     const formulario = document.getElementById('producto-formulario');
     let yaSeDesplazo = false; // Control de si ya se hizo el scroll
 
-    // Primero, verifica si el formulario es válido según las validaciones HTML
+    // Verifica si el formulario es válido según las validaciones HTML
     if (!formulario.checkValidity()) {
-        // Si no es válido, evita el comportamiento por defecto (no se envía)
-        event.preventDefault();
+        event.preventDefault(); // Evita el envío si el formulario no es válido
 
-        // Buscar el primer campo inválido
+        // Desplazar al primer campo inválido
         const campoInvalido = formulario.querySelector(':invalid');
         if (campoInvalido && !yaSeDesplazo) {
-            // Desplazar hacia el primer campo inválido solo si no se ha hecho scroll previamente
             campoInvalido.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            yaSeDesplazo = true; // Marcar que ya se hizo el scroll
+            yaSeDesplazo = true;
         }
-
-        
-
     } else {
-        // Si el formulario es válido, mostrar la alerta de confirmación de guardado
-        event.preventDefault(); // Evita el envío inmediato
-
+        // Si el formulario es válido, mostrar la alerta de confirmación
         Swal.fire({
             title: '¡Cambios Guardados!',
             text: 'Tus cambios fueron guardados correctamente.',
             icon: 'success',
-            showConfirmButton: false, // Quita el botón de "Aceptar"
-            timer: 1250, // La alerta se cierra automáticamente después de 1.25 segundos
+            showConfirmButton: false,
+            timer: 1250,
             timerProgressBar: true
         }).then(() => {
+            // Completar la solicitud AJAX solo si el usuario guardó
+            if (ajaxInProgress) {
+                // Crear el cuerpo de la solicitud con las imágenes a eliminar
+                const selectedImages = Array.from(document.querySelectorAll('input[name="imagenes_a_eliminar"]:checked'))
+                                            .map(checkbox => checkbox.value);
+
+                const formData = new URLSearchParams();
+                selectedImages.forEach(id => formData.append('imagenes_a_eliminar', id));
+
+                // Realizar la solicitud AJAX
+                fetch('/eliminar-imagenes/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'X-CSRFToken': getCookie('csrftoken') // Agrega el CSRF token
+                    },
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        // Eliminar las imágenes de la interfaz
+                        selectedImages.forEach(id => {
+                            document.querySelector(`input[value="${id}"]`).closest('li').remove();
+                        });
+                    } else {
+                        Swal.fire("Error", data.message, "error");
+                    }
+                })
+                .catch(error => console.error('Error en la solicitud:', error));
+            }
+       
             // Luego de la alerta, enviar el formulario manualmente
             formulario.submit(); // Aquí se ejecuta el envío del formulario
+        
         });
     }
 });
 
+// Escuchar el clic en el botón de cancelar
+document.getElementById('boton-cancelar-producto').addEventListener('click', function(event) {
+    event.preventDefault(); // Evita que el formulario se restablezca de inmediato
+
+    // Recargar la página después de un retraso
+    setTimeout(() => {
+        location.reload();
+    }, 200);
+});
 
 //Alerta al clcikear el boton eliminar
 document.getElementById('eliminar-producto').addEventListener('click', function() {
@@ -334,9 +359,7 @@ document.getElementById('eliminar-producto').addEventListener('click', function(
 
 
 
-
 // >>>>>>>>>>>>>>>>>>>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<<<<<<
-
 
 // Selecciona el contenedor de imágenes
 const contenedorImagenes = document.getElementById('imagenes-producto');
@@ -364,7 +387,6 @@ const mostrarNotificacion = (mensaje) => {
         }, 300);
     }, 3000);
 };
-
 
 // Función para contar imágenes y controlar el mínimo de 1 imagen
 const actualizarConteo = () => {
@@ -414,3 +436,5 @@ observer.observe(contenedorImagenes, config);
 
 // Llama a la función inicialmente para verificar la cantidad de imágenes
 actualizarConteo();
+
+

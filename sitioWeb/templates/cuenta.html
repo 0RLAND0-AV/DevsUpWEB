@@ -22,7 +22,7 @@
             <div id="modal-editar-nombre" class="modal">
                 <div class="modal-content">
                     <h2>Editar Nombre</h2>
-                    <input type="text" id="input-editar-nombre" name="nuevo_nombre" value="{{ user.nombre }}">
+                    <input type="text" id="input-editar-nombre" name="nuevo_nombre" value="{{ user.nombre }}" maxlength="20" >
                     <div class="modal-buttons">
                         <button type="button" id="cancelar-nombre">Salir</button>
                         <button type="button" id="guardar-nombre">Guardar</button>

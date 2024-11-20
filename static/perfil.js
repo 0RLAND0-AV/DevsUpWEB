@@ -150,3 +150,38 @@ document.getElementById('guardar-celular').addEventListener('click', function() 
     }
 });
 //-----------fin modal
+
+
+
+//------------------------------------------------------------------------BILLETERA----------------------------------------------------------------------
+// Función para mostrar y ocultar el saldo
+// Función para mostrar y ocultar el saldo con cambio de imagen y texto
+function toggleSaldo() {
+    const saldo = document.getElementById('saldo');
+    const toggleButton = document.getElementById('toggle-saldo');
+
+    // Cambiar la visibilidad del saldo
+    saldo.classList.toggle('oculto');
+
+    // Cambiar el texto y el icono dependiendo del estado
+    if (saldo.classList.contains('oculto')) {
+        // Si está oculto, mostrar "Mostrar" y el icono de ojo cerrado
+        toggleButton.innerHTML = '👁️‍🗨️ Mostrar';  // Icono de ojo cerrado con texto "Mostrar"
+    } else {
+        // Si está visible, mostrar "Ocultar" y el icono de ojo abierto
+        toggleButton.innerHTML = '👁️ Ocultar';  // Icono de ojo abierto con texto "Ocultar"
+    }
+}
+
+
+// Función para activar el campo de entrada correspondiente
+function activarInput(inputId) {
+    const depositoInput = document.getElementById('deposito-input');
+    const retiroInput = document.getElementById('retiro-input');
+
+    // Ocultar ambos formularios y luego mostrar el seleccionado
+    depositoInput.style.display = 'none';
+    retiroInput.style.display = 'none';
+
+    document.getElementById(inputId).style.display = 'flex';
+}

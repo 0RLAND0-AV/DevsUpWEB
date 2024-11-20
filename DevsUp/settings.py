@@ -37,6 +37,7 @@ LOGOUT_REDIRECT_URL = '/'  # Cambia '/' por la URL de tu página de inicio si es
 # Application definition
 
 INSTALLED_APPS = [
+    'jazzmin',#Para jazzmin estilos del admin
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -46,6 +47,54 @@ INSTALLED_APPS = [
     # importante debemos registrar las app que creemos
     'sitioWeb.apps.SitiowebConfig', #ubicacion "nombredelaApp.programa.metodo"
 ]
+JAZZMIN_SETTINGS = {
+    "show_ui_builder": False,  # Habilita el UI Builder en Jazzmin
+    # Puedes añadir más configuraciones personalizadas aquí
+    #Para que funcione mis propios css
+    "custom_css": "common/main.css",
+    "custom_js": "common/js/main.js",
+
+    #para personalizar por ejmplo mi propio logo
+    
+    "welcome_sign": "Admin DRACARYS-Store",  # Texto de bienvenida
+    "site_title": "Mi Admin",
+    "site_header": "DRACARYS-Store",
+    "site_brand": "Dracarys-Store",
+    "site_icon": "images/favicon.ico",  # Para favicon, si tienes uno
+    # Más configuraciones opcionales de Jazzmin
+}
+
+JAZZMIN_UI_TWEAKS = {
+    "navbar_small_text": False,
+    "footer_small_text": False,
+    "body_small_text": False,
+    "brand_small_text": False,
+    "brand_colour": "navbar-warning",
+    "accent": "accent-navy",
+    "navbar": "navbar-white navbar-light",
+    "no_navbar_border": True,
+    "navbar_fixed": True,
+    "layout_boxed": False,
+    "footer_fixed": False,
+    "sidebar_fixed": True,
+    "sidebar": "sidebar-dark-olive",
+    "sidebar_nav_small_text": False,
+    "sidebar_disable_expand": False,
+    "sidebar_nav_child_indent": False,
+    "sidebar_nav_compact_style": False,
+    "sidebar_nav_legacy_style": False,
+    "sidebar_nav_flat_style": False,
+    "theme": "default",
+    "dark_mode_theme": None,
+    "button_classes": {
+        "primary": "btn-primary",
+        "secondary": "btn-secondary",
+        "info": "btn-info",
+        "warning": "btn-warning",
+        "danger": "btn-danger",
+        "success": "btn-success"
+    }
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -111,7 +160,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'es-us'
 
 TIME_ZONE = 'America/La_Paz' # importante si nos no va registrar la hora correcta
 

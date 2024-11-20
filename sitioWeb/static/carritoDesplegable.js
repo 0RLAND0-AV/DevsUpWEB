@@ -145,6 +145,8 @@ function actualizarPopup(productos) {
             });
         });
     }
+    cartPopup.innerHTML += `<a href="/transaccion/" class="btn-buy">Comprar</a>`;
+
 }
 // Función para obtener el token CSRF
 function getCookie(name) {
@@ -161,4 +163,5 @@ function getCookie(name) {
     }
     return cookieValue;
 }
+
 

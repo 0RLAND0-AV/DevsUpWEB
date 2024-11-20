@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import path
 from django.contrib import admin
-from .models import Usuario , Producto ,Categoria,CarritoProducto , Departamento,Provincia,subCategoria,EstadoDelProducto,Imagenes
+from .models import Usuario , Producto ,Categoria,CarritoProducto , Departamento,Provincia,subCategoria,EstadoDelProducto,Imagenes,ConfiguracionLogo
 from django.http import HttpResponse ,JsonResponse,HttpResponseRedirect
 from django.contrib.auth import authenticate, login ,logout , authenticate
 from django.contrib import messages
@@ -11,6 +11,160 @@ from django.views.decorators.csrf import csrf_exempt
 import json
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import get_user_model
+from django.db import transaction
+
+from django.shortcuts import redirect
+from django.contrib import messages
+from decimal import Decimal
+from decimal import Decimal, ROUND_HALF_UP
+
+def billetera_view(request):
+    # Verifica si el usuario está autenticado a través de la sesión
+    user_id = request.session.get('user_id')
+    if not user_id:
+        return redirect('login')
+
+    # Obtiene el usuario a través de su ID
+    usuario = get_object_or_404(Usuario, idUsuario=user_id)
+    carritos = CarritoProducto.objects.filter(usuario=usuario, producto__estado_producto=True)
+    cantidad_carrito = carritos.count()
+    colores_personalizados = PersonalizarColores.objects.filter(usuario_id=user_id).first()
+
+    # Procesa las acciones de recargar, transferir y retirar saldo
+    if request.method == 'POST':
+        accion = request.POST.get('accion')  # Obtén la acción del formulario
+        
+        try:
+            monto = Decimal(request.POST.get('monto_recarga') or request.POST.get('monto_transferencia') or request.POST.get('monto_retiro', 0))
+        except (TypeError, ValueError):
+            messages.error(request, "Monto inválido.")
+            return redirect('billetera')  # Redirige tras error
+
+        if accion == 'recargar':
+            usuario.billetera += monto
+            usuario.save()
+            messages.success(request, 'Saldo recargado exitosamente.')
+        elif accion == 'transferir':
+            correo_destinatario = request.POST.get('correo_destinatario')
+            destinatario = get_object_or_404(Usuario, correo=correo_destinatario)
+            if monto > usuario.billetera:
+                messages.error(request, 'Saldo insuficiente para transferir.')
+            else:
+                comision = monto * Decimal(0.1)
+                usuario.billetera -= monto
+                destinatario.billetera += monto * Decimal(0.9)
+                admin = get_object_or_404(Usuario, nombre='ADMIN')
+                admin.billetera += comision
+                usuario.save()
+                destinatario.save()
+                admin.save()
+                messages.success(request, 'Transferencia realizada con éxito, menos la comisión.')
+        elif accion == 'retirar':
+            if monto > usuario.billetera:
+                messages.error(request, 'Saldo insuficiente para retirar.')
+            else:
+                usuario.billetera -= monto
+                usuario.save()
+                messages.success(request, 'Retiro realizado exitosamente.')
+        
+        return redirect('billetera')  # Redirige después de manejar el POST
+
+    # Renderiza la página de billetera
+    return render(request, 'billetera.html', {
+        'user': usuario,
+        'saldo': usuario.billetera,
+        'carritos': carritos,
+        'cantidad_carrito': cantidad_carrito,
+        'is_profile_page': True,
+        'temitas': colores_personalizados
+    })
+
+
+
+# Verifica si el usuario está autenticado antes de mostrar el carrito
+def transaccion_view(request):
+    # Verifica si el usuario está autenticado
+    user_id = request.session.get('user_id')
+    if not user_id:
+        return redirect('login')
+
+    # Obtiene el usuario y los productos en su carrito
+    usuario = get_object_or_404(Usuario, idUsuario=user_id)
+    productos_en_carrito = CarritoProducto.objects.filter(usuario=usuario)
+    cantidad_carrito = productos_en_carrito.count()
+    colores_personalizados = PersonalizarColores.objects.filter(usuario_id=user_id).first()
+
+    # Verifica si el carrito está vacío
+    if not productos_en_carrito.exists():
+        messages.info(request, 'No tienes productos en tu carrito.')
+        return redirect('base')
+
+    # Calcula el total y la comisión
+    total = sum(item.producto.precio for item in productos_en_carrito)
+    comision = (total * Decimal(0.1)).quantize(Decimal('0.00'), rounding=ROUND_HALF_UP)
+    total_con_comision = (total + comision).quantize(Decimal('0.00'), rounding=ROUND_HALF_UP)
+
+    # Procesa la confirmación de compra
+    if request.method == 'POST' and 'confirmar_compra' in request.POST:
+        # Verifica que el usuario tenga saldo suficiente
+        if usuario.billetera < total_con_comision:
+            messages.error(request, "No tienes suficiente saldo en tu billetera para esta compra.")
+            return redirect('transaccion')
+
+        # Transacción de compra
+        try:
+            with transaction.atomic():
+                # Transfiere el dinero a los propietarios de los productos y desactiva el producto
+                for item in productos_en_carrito:
+                    producto = item.producto
+                    propietario = producto.usuario
+                    if propietario != usuario:  # Evita transferencias a sí mismo
+                        propietario.billetera += producto.precio
+                        propietario.save()
+
+                    # Marca el producto como inactivo
+                    producto.estado_producto = False
+                    producto.save()
+
+                # Deduce el total (incluyendo comisión) de la billetera del usuario
+                usuario.billetera -= total_con_comision
+                usuario.save()
+
+                # Obtiene o crea al usuario 'ADMIN' y le asigna la comisión
+                admin_user, created = Usuario.objects.get_or_create(
+                    nombre='ADMIN',
+                    correo='ADMIN@gmail.com',
+                    defaults={'billetera': Decimal(0)}
+                )
+                admin_user.billetera += comision
+                admin_user.save()
+
+                # Vacía el carrito
+                productos_en_carrito.delete()
+
+                messages.success(request, "Compra confirmada. Los pagos se han realizado correctamente y los productos fueron desactivados.")
+
+        except Exception as e:
+            messages.error(request, f"Ocurrió un error al procesar la compra: {e}")
+            return redirect('transaccion')
+
+        return redirect('base')
+
+    # Renderiza la vista de transacción
+    return render(request, 'transaccion.html', {
+        'user': usuario,
+        'carritos': productos_en_carrito,
+        'total': total,
+        'comision': comision,
+        'total_comision': total_con_comision,
+        'saldo': usuario.billetera,
+        'cantidad_carrito': cantidad_carrito,
+        'is_profile_page': True,
+        'temitas':colores_personalizados
+    })
+
+from .models import PersonalizarColores
+from .models import Usuario, PersonalizarColores
 
 
 
@@ -19,6 +173,7 @@ def baseView(request):
     '''Esto es la página principal'''
         
     user_id = request.session.get('user_id')
+    print(user_id)
     user = None
     if user_id:
         user = Usuario.objects.get(idUsuario=user_id)
@@ -27,43 +182,45 @@ def baseView(request):
     categorias = Categoria.objects.prefetch_related('subcategorias').all()  # Obtiene todas las categorías y sus subcategorías   
     carritos = CarritoProducto.objects.filter(usuario=user,producto__estado_producto=True)
     cantidad_carrito = carritos.count()  # Calcula la cantidad de productos en el carrito
+    config_logo = ConfiguracionLogo.objects.first()  # Obtiene el primer registro del logo
+    colores_personalizados = PersonalizarColores.objects.filter(usuario_id=user_id).first()
     
     return render(request, "base.html", {
         'user': user,
         'productos': productos,
         'categorias': categorias,
         'carritos': carritos,
-        'cantidad_carrito': cantidad_carrito  # Añade el contador al contexto
+        'cantidad_carrito': cantidad_carrito,  # Añade el contador al contexto
+        'config_logo': config_logo,
+        'temitas': colores_personalizados
     })
 
 def login_view(request):
     if request.method == 'POST':
         username = request.POST['username']
         password = request.POST['password']
-        
-        # Autenticar usuario
+
         user = Usuario.objects.filter(nombre=username, contraseña=password).first()
 
         if user:
-            # Guardar usuario en la sesión
-            request.session['user_id'] = user.idUsuario
-            request.session['username'] = user.nombre  # Guardar el nombre del usuario en la sesión
-            messages.success(request, '¡Bienvenido, {}! Has iniciado sesión correctamente.'.format(user.nombre))
-            return redirect('base')  # Redirige a la página principal
+            if user.estadoUsuario:
+                request.session['user_id'] = user.idUsuario
+                request.session['username'] = user.nombre
+                messages.success(request, f'¡Bienvenido, {user.nombre}! Has iniciado sesión correctamente.')
+                return redirect('base')
+            else:
+                messages.error(request, 'Tu cuenta está inactiva. Contacta con el soporte para más información.')
+                return redirect('base')
         else:
             messages.error(request, 'Usuario o contraseña incorrectos')
-            return redirect('base')  # Redirige a la página principal
-    
+            return redirect('base')
+
+    # Mostrar el formulario de login si no se ha enviado un POST
     user_id = request.session.get('user_id')
-    user = None
-    if user_id:
-        user = Usuario.objects.get(idUsuario=user_id)
+    user = Usuario.objects.get(idUsuario=user_id) if user_id else None
 
     if not user:
-        # Agregar el parámetro `login=1` a la URL para que el modal se abra
         return redirect('/?login=1')
-
-
 
     return render(request, 'base.html')
 
@@ -107,6 +264,8 @@ def perfil_view(request):
     user = Usuario.objects.get(idUsuario=user_id)
     carritos = CarritoProducto.objects.filter(usuario=user,producto__estado_producto=True)
     cantidad_carrito = carritos.count()
+    config_logo = ConfiguracionLogo.objects.first()
+    colores_personalizados = PersonalizarColores.objects.filter(usuario_id=user_id).first()
 
     if request.method == 'POST':
         # Si hay un archivo de imagen en la solicitud
@@ -127,7 +286,7 @@ def perfil_view(request):
             
         user.save()  # Guarda los cambios en la base de datos
 
-    return render(request, 'perfil.html', {'user': user,'is_profile_page': True,'carritos': carritos,'cantidad_carrito': cantidad_carrito})
+    return render(request, 'perfil.html', {"user_id":user_id,'user': user,'is_profile_page': True,'carritos': carritos,'cantidad_carrito': cantidad_carrito,'config_logo': config_logo, "masTemas":colores_personalizados})
 
 def logout_request(request):
     logout(request)
@@ -226,13 +385,17 @@ def ofertarMView(request):
     # Obtener el usuario desde la sesión
     user_id = request.session.get('user_id')
     carritos = CarritoProducto.objects.filter(usuario=user_id,producto__estado_producto=True)
+    config_logo = ConfiguracionLogo.objects.first()
+    
+    
+    
     # Si no hay usuario en sesión, redirigir al login
     if not user_id:
         return redirect('login')
-
     # Obtener el usuario o lanzar un 404 si no existe
     user = get_object_or_404(Usuario, idUsuario=user_id)
     cantidad_carrito = carritos.count()
+    colores_personalizados = PersonalizarColores.objects.filter(usuario_id=user_id).first()
 
     if request.method == 'POST':
         # Obtener los datos del formulario
@@ -276,7 +439,7 @@ def ofertarMView(request):
         return redirect('base')
 
     # Si la solicitud es GET, renderizar el formulario con el usuario
-    return render(request, 'ofertar.html', {'user': user,'is_profile_page': True,'carritos': carritos,'cantidad_carrito': cantidad_carrito})
+    return render(request, 'ofertar.html', {'user_id':user_id,'user': user,'is_profile_page': True,'carritos': carritos,'cantidad_carrito': cantidad_carrito,'config_logo': config_logo,'temitas':colores_personalizados})
 
 
 def mis_materiales(request):
@@ -286,9 +449,11 @@ def mis_materiales(request):
     user = get_object_or_404(Usuario, idUsuario=user_id)
 
     carritos = CarritoProducto.objects.filter(usuario=user_id,producto__estado_producto=True)
+    config_logo = ConfiguracionLogo.objects.first()
     cantidad_carrito = carritos.count()
     # Recupera todos los productos del usuario autenticado
     productos = Producto.objects.filter(usuario=user_id)
+    colores_personalizados = PersonalizarColores.objects.filter(usuario_id=user_id).first()
 
     # Filtra los productos si se selecciona una opción en el filtro
     filtro = request.GET.get('filtro')
@@ -298,7 +463,7 @@ def mis_materiales(request):
         productos = productos.filter(estado_producto=False)
 
 
-    return render(request, 'productos_usuario.html', {'user': user,'is_profile_page': True,'carritos': carritos,'misProductos': productos,'cantidad_carrito': cantidad_carrito})
+    return render(request, 'productos_usuario.html', {'user_id':user_id,'user': user,'is_profile_page': True,'carritos': carritos,'misProductos': productos,'cantidad_carrito': cantidad_carrito,'config_logo': config_logo,'temitas':colores_personalizados})
 
 def detalle_producto(request, producto_id):
     user_id = request.session.get('user_id')
@@ -307,6 +472,7 @@ def detalle_producto(request, producto_id):
         return redirect('login')
     
     user = get_object_or_404(Usuario, idUsuario=user_id)
+    
     
     # Obtener el producto y verificar que pertenece al usuario autenticado
     producto = get_object_or_404(Producto, id=producto_id)
@@ -320,7 +486,10 @@ def detalle_producto(request, producto_id):
 
 
     carritos = CarritoProducto.objects.filter(usuario=user_id,producto__estado_producto=True)
+    config_logo = ConfiguracionLogo.objects.first()
     cantidad_carrito = carritos.count()
+    
+    colores_personalizados = PersonalizarColores.objects.filter(usuario_id=user_id).first()
 
     #producto = get_object_or_404(Producto, id=producto_id)
     categorias = Categoria.objects.all()  # Traer todas las categorías
@@ -368,6 +537,9 @@ def detalle_producto(request, producto_id):
         'provincias': provincias,
         'estados': estados,
         'cantidad_carrito': cantidad_carrito,
+        'config_logo': config_logo,
+        'temitas':colores_personalizados,
+        'user_id':user_id,
         #'imagenes': producto.imagenes.all(),
     })
 def eliminar_imagenes(request):
@@ -428,3 +600,76 @@ def eliminar_productos(request):
         return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
 
     return JsonResponse({'error': 'Método no permitido.'}, status=405)
+
+
+
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from .models import PersonalizarColores
+
+@csrf_exempt
+def guardar_colores(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        user_id = data.get('user_id')
+        primary = data.get('primary')
+        secondary = data.get('secondary')
+        tertiary = data.get('tertiary')
+        text = data.get('text')
+        background = data.get('background')
+
+        # Crear o actualizar la personalización de colores del usuario
+        personalizar_colores, created = PersonalizarColores.objects.update_or_create(
+            usuario_id=user_id,
+            defaults={
+                'primario': primary,
+                'secundario': secondary,
+                'terciario': tertiary,
+                'texto': text,
+                'fondo': background
+            }
+        )
+        return JsonResponse({'status': 'success', 'message': 'Colores guardados correctamente'})
+
+    return JsonResponse({'status': 'error', 'message': 'Método no permitido'}, status=405)
+
+
+
+
+def obtener_colores_usuario(request, user_id):
+    # Obtener la personalización de colores del usuario
+    personalizacion = get_object_or_404(PersonalizarColores, usuario_id=user_id)
+    
+    # Asignar los valores de cada campo a variables independientes
+    primario = personalizacion.primario
+    secundario = personalizacion.secundario
+    terciario = personalizacion.terciario
+    texto = personalizacion.texto
+    fondo = personalizacion.fondo
+    
+    # Pasar los valores al contexto de la plantilla o usarlos en la lógica
+    return render(request, 'personalizar.html', {
+        'primario': primario,
+        'secundario': secundario,
+        'terciario': terciario,
+        'texto': texto,
+        'fondo': fondo,
+    })
+
+
+
+def obtener_colores(request):
+    # Obtén el user_id desde la sesión
+    user_id = request.session.get('user_id')
+    
+    if not user_id:
+        return redirect('login')  # Redirigir al login si no está autenticado
+    
+    # Obtener el usuario usando el user_id
+    user = Usuario.objects.get(idUsuario=user_id)
+    
+    # Obtener solo el ID de los registros de PersonalizarColores asociados al usuario
+    personalizar_colores = PersonalizarColores.objects.filter(usuario=user).values('id')
+    
+    # Puedes pasar estos IDs a la plantilla, si es necesario
+    return render(request, 'colores.html', {"user_id": user_id, 'user': user, 'personalizar_colores': personalizar_colores})

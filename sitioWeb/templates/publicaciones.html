@@ -6,7 +6,43 @@
     <div class="product-grid" id="product-grid">
         {% for producto in productos %}
         <div class="product-card" data-subcategoria-id="{{ producto.subcategoria.id }}">
-            <img src="{{ producto.imagenes.first.ruta.url }}" alt="{{ producto.nombre }}">
+            <!-- Carrusel de imágenes del producto -->
+            <div id="carousel-{{ producto.id }}" class="carousel slide" data-bs-ride="carousel">
+                
+                
+                <!-- Indicadores del carrusel -->
+                <div class="carousel-indicators">
+                    {% for imagen in producto.imagenes.all %}
+                    <button type="button" data-bs-target="#carousel-{{ producto.id }}" 
+                            data-bs-slide-to="{{ forloop.counter0 }}" 
+                            class="{% if forloop.first %}active{% endif %}" 
+                            aria-current="{% if forloop.first %}true{% endif %}" 
+                            aria-label="Imagen {{ forloop.counter }}">
+                    </button>
+                    {% endfor %}
+                </div>
+
+                <!-- Contenedor de imágenes -->
+                <div class="carousel-inner">
+                    {% for imagen in producto.imagenes.all %}
+                    <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                        <img src="{{ imagen.ruta.url }}" 
+                             class="d-block w-100 product-image zoom-effect" 
+                             alt="{{ producto.nombre }}">
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <!-- Controles del carrusel -->
+                <button class="carousel-control-prev" type="button" data-bs-target="#carousel-{{ producto.id }}" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Anterior</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#carousel-{{ producto.id }}" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Siguiente</span>
+                </button>
+            </div>
             <h3>{{ producto.nombre }}</h3>
             <h2>{{ producto.subcategoria.nombre }}</h2>            
             <p class="description" onclick="showModal('{{ producto.descripcion }}')">

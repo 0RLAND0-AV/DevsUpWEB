@@ -132,3 +132,33 @@ class CarritoProducto(models.Model):
 
     def __str__(self):
         return f"{self.producto.nombre} en el carrito de {self.usuario.nombre}"
+
+
+class ConfiguracionLogo(models.Model):
+    logo = models.ImageField(upload_to='logos/')
+    nombre = models.CharField(max_length=255, default="Logo")  # Campo nombre con valor predeterminado
+    fecha_creacion = models.DateTimeField(auto_now_add=True)
+    class Meta:
+        db_table = "Logo"
+        verbose_name = "Configuracion del logo"
+        verbose_name_plural = "Configuracion del logo"
+
+    def __str__(self):
+        return self.nombre
+        
+
+class PersonalizarColores(models.Model):
+    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE, null=True, blank=True)
+    primario = models.CharField(max_length=7, null=False, blank=False)
+    secundario = models.CharField(max_length=7, null=False, blank=False)
+    terciario = models.CharField(max_length=7, null=False, blank=False)
+    texto = models.CharField(max_length=7, null=False, blank=False)
+    fondo = models.CharField(max_length=7, null=False, blank=False)
+    
+    class Meta:
+        db_table = "PersonalizarColores"  # Nombre en plural para consistencia
+        verbose_name = "Personalizar Color"
+        verbose_name_plural = "Personalizar Colores"
+    
+    def __str__(self):
+        return f"Personalización de colores para usuario {self.usuario}" if self.usuario else "Personalización de colores"

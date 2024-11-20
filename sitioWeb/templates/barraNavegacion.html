@@ -2,7 +2,12 @@
 <nav class="navbar">
     <div class="logo">
         <a href="{% url 'base' %}">
-            <img src="{% static 'LogoIS_Oficial.png' %}" alt="Logo" class="logo-img">
+            {% if config_logo and config_logo.logo %}
+                <img src="{{ config_logo.logo.url }}" alt="Logo" class="logo-img">
+            {% else %}
+                <!-- Imagen por defecto en caso de que no haya logo en la base de datos -->
+                <img src="{% static 'LogoIS_Oficial.png' %}" alt="Logo" class="logo-img">
+            {% endif %}
         </a>
     </div>
     <div class="search-bar">        
@@ -31,6 +36,8 @@
                     {% else %}
                         <p>No hay productos en el carrito.</p>
                     {% endif %}
+                    <!-- Botón "Comprar" -->
+                    <a href="{% url 'transaccion' %}" class="btn-buy">Comprar</a>
                 </div>
             {% endif %}
         </div>        

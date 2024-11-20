@@ -229,7 +229,7 @@ label {
 }
 
 .profile-config form input{
-    background: #03A678;
+    background: var(--primary-color);
     padding: 5px;
     margin-bottom: 10px;
     border: none;
@@ -274,6 +274,16 @@ label {
     width: 300px;
     text-align: center;
 }
+#input-editar-nombre{
+    background-color:var(--secondary-color);
+}
+#input-editar-correo{
+    background-color:var(--secondary-color);
+}
+#input-editar-celular{
+    background-color:var(--secondary-color);
+}
+
 .modal-content h3,h2{
     color: var(--white);
 }
