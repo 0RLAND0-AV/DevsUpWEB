@@ -15,30 +15,37 @@ from django.db import transaction
 
 from django.shortcuts import redirect
 from django.contrib import messages
-from decimal import Decimal
-from decimal import Decimal, ROUND_HALF_UP
+from decimal import Decimal, ROUND_HALF_UP,InvalidOperation
+
+
 
 def billetera_view(request):
-    # Verifica si el usuario está autenticado a través de la sesión
+    # Verifica si el usuario está autenticado
     user_id = request.session.get('user_id')
     if not user_id:
         return redirect('login')
 
-    # Obtiene el usuario a través de su ID
+    # Obtiene el usuario actual
     usuario = get_object_or_404(Usuario, idUsuario=user_id)
     carritos = CarritoProducto.objects.filter(usuario=usuario, producto__estado_producto=True)
     cantidad_carrito = carritos.count()
     colores_personalizados = PersonalizarColores.objects.filter(usuario_id=user_id).first()
-
-    # Procesa las acciones de recargar, transferir y retirar saldo
+    config_logo = ConfiguracionLogo.objects.first()
     if request.method == 'POST':
-        accion = request.POST.get('accion')  # Obtén la acción del formulario
-        
+        accion = request.POST.get('accion')  # Identifica la acción
         try:
-            monto = Decimal(request.POST.get('monto_recarga') or request.POST.get('monto_transferencia') or request.POST.get('monto_retiro', 0))
-        except (TypeError, ValueError):
-            messages.error(request, "Monto inválido.")
-            return redirect('billetera')  # Redirige tras error
+            monto = Decimal(request.POST.get('monto_recarga') or 
+                            request.POST.get('monto_transferencia') or 
+                            request.POST.get('monto_retiro', 0))
+            # Redondear a 2 decimales
+            monto = monto.quantize(Decimal('0.01'), rounding=ROUND_HALF_UP)
+        except (TypeError, ValueError, InvalidOperation):
+            messages.error(request, "El monto ingresado no es válido.")
+            return redirect('billetera')
+
+        if monto <= 0:
+            messages.error(request, "El monto debe ser mayor a 0.")
+            return redirect('billetera')
 
         if accion == 'recargar':
             usuario.billetera += monto
@@ -46,19 +53,22 @@ def billetera_view(request):
             messages.success(request, 'Saldo recargado exitosamente.')
         elif accion == 'transferir':
             correo_destinatario = request.POST.get('correo_destinatario')
-            destinatario = get_object_or_404(Usuario, correo=correo_destinatario)
-            if monto > usuario.billetera:
-                messages.error(request, 'Saldo insuficiente para transferir.')
-            else:
-                comision = monto * Decimal(0.1)
-                usuario.billetera -= monto
-                destinatario.billetera += monto * Decimal(0.9)
-                admin = get_object_or_404(Usuario, nombre='ADMIN')
-                admin.billetera += comision
-                usuario.save()
-                destinatario.save()
-                admin.save()
-                messages.success(request, 'Transferencia realizada con éxito, menos la comisión.')
+            try:
+                destinatario = get_object_or_404(Usuario, correo=correo_destinatario)
+                if monto > usuario.billetera:
+                    messages.error(request, 'Saldo insuficiente para transferir.')
+                else:
+                    comision = (monto * Decimal(0.1)).quantize(Decimal('0.01'), rounding=ROUND_HALF_UP)
+                    usuario.billetera -= monto
+                    destinatario.billetera += (monto - comision)
+                    admin = get_object_or_404(Usuario, nombre='ADMIN')
+                    admin.billetera += comision
+                    usuario.save()
+                    destinatario.save()
+                    admin.save()
+                    messages.success(request, f'Transferencia realizada exitosamente. Comisión: {comision} Bs.')
+            except Usuario.DoesNotExist:
+                messages.error(request, 'El destinatario no existe.')
         elif accion == 'retirar':
             if monto > usuario.billetera:
                 messages.error(request, 'Saldo insuficiente para retirar.')
@@ -66,17 +76,21 @@ def billetera_view(request):
                 usuario.billetera -= monto
                 usuario.save()
                 messages.success(request, 'Retiro realizado exitosamente.')
-        
-        return redirect('billetera')  # Redirige después de manejar el POST
+        else:
+            messages.error(request, 'Acción no válida.')
 
-    # Renderiza la página de billetera
+        return redirect('billetera')
+
+    # Renderiza la vista de la billetera
     return render(request, 'billetera.html', {
         'user': usuario,
         'saldo': usuario.billetera,
         'carritos': carritos,
         'cantidad_carrito': cantidad_carrito,
         'is_profile_page': True,
-        'temitas': colores_personalizados
+        'config_logo': config_logo,
+        'temitas': colores_personalizados,
+        'user_id': user_id,
     })
 
 
@@ -93,7 +107,7 @@ def transaccion_view(request):
     productos_en_carrito = CarritoProducto.objects.filter(usuario=usuario)
     cantidad_carrito = productos_en_carrito.count()
     colores_personalizados = PersonalizarColores.objects.filter(usuario_id=user_id).first()
-
+    config_logo = ConfiguracionLogo.objects.first()
     # Verifica si el carrito está vacío
     if not productos_en_carrito.exists():
         messages.info(request, 'No tienes productos en tu carrito.')
@@ -160,6 +174,7 @@ def transaccion_view(request):
         'saldo': usuario.billetera,
         'cantidad_carrito': cantidad_carrito,
         'is_profile_page': True,
+        'config_logo': config_logo,
         'temitas':colores_personalizados
     })
 
@@ -226,6 +241,7 @@ def login_view(request):
 
 # se añadio telefono con el valor de NumTelefono para mandarlo a la BD(celular)
 def registroView(request):
+    config_logo = ConfiguracionLogo.objects.first()
     if request.method == 'POST':
         # Obtener los datos del formulario
         nombre = request.POST.get('username')
@@ -233,6 +249,7 @@ def registroView(request):
         telefono = request.POST.get('NumTelefono')
         contraseña = request.POST.get('password')
         confirmar_contraseña = request.POST.get('confirmPassword')
+        
 
         # Validación básica
         if contraseña != confirmar_contraseña:
@@ -253,7 +270,7 @@ def registroView(request):
             messages.error(request, 'Ocurrió un error al guardar el usuario.')
             return redirect('registro')
 
-    return render(request, 'registro.html')
+    return render(request, 'registro.html',{'config_logo': config_logo})
 
 def perfil_view(request):
     user_id = request.session.get('user_id')

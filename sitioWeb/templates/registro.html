@@ -29,14 +29,21 @@
   <div class="container">
     <div class="left-section">
         <a href="{% url 'base' %}">
-            <img src="{% static 'LogoIS_Oficial.png' %}" alt="Logo" class="image">
+            {% if config_logo and config_logo.logo %}
+                <img src="{{ config_logo.logo.url }}" alt="Logo" class="image">
+            {% else %}
+                <!-- Imagen por defecto en caso de que no haya logo en la base de datos -->
+                <img src="{% static 'LogoIS_Oficial.png' %}" alt="Logo" class="image">
+            {% endif %}
         </a>
-     <div class="texto"> 
-      <p class="description">Bienvenido a nuestra plataforma de materiales de 
-      construcción usados. Encuentra productos de calidad a precios accesibles. 
-        </p>
-      </div>
+        <div class="texto">
+            <p class="description">
+                Bienvenido a nuestra plataforma de materiales de construcción usados. 
+                Encuentra productos de calidad a precios accesibles.
+            </p>
+        </div>
     </div>
+    
 
     <div class="right-section">
       <div class="login-box">

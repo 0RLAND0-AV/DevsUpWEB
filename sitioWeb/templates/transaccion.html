@@ -41,7 +41,7 @@
             </form>
             <form method="POST" action="cancelar_compra">
                 {% csrf_token %}
-                <button type="submit" class="btn-cancelar">Cancelar Compra</button>
+                <button type="button" class="btn-cancelar" onclick="history.back()">Cancelar Compra</button>
             </form>        
         </div>
     </div>

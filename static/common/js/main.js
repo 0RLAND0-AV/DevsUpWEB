@@ -52,3 +52,129 @@ document.querySelectorAll('th').forEach(th => {
         th.style.color = 'black';  // Cambia el color del texto a negro
     }
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+document.addEventListener("DOMContentLoaded", function () {
+    const fileInput = document.querySelector('input[type="file"][name="logo"]'); // Selector del input
+    const linkElement = document.querySelector('.file-upload a'); // Selector del enlace actual
+    let currentPreview = null; // Variable para la vista previa actual
+
+    // Crea un elemento de imagen para previsualización y configúralo
+    const previewImage = document.createElement("img");
+    previewImage.style.maxHeight = "100px";
+    previewImage.style.marginTop = "10px";
+    previewImage.style.display = "block";
+
+    // Mostrar la imagen actual de la base de datos si existe
+    if (linkElement) {
+        previewImage.src = linkElement.href; // Usa el enlace como fuente
+        linkElement.parentElement.appendChild(previewImage); // Inserta la imagen debajo del enlace
+        currentPreview = previewImage; // Guarda la referencia a la vista previa actual
+    }
+
+    // Escuchar cambios en el input de archivo
+    if (fileInput) {
+        fileInput.addEventListener("change", function (event) {
+            const file = event.target.files[0];
+
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    // Reemplaza la fuente de la vista previa actual con la nueva imagen seleccionada
+                    previewImage.src = e.target.result;
+                    if (!currentPreview) {
+                        // Si no hay vista previa actual, agrega la nueva al DOM
+                        linkElement.parentElement.appendChild(previewImage);
+                        currentPreview = previewImage;
+                    }
+                };
+                reader.readAsDataURL(file);
+            } else {
+                // Si no hay archivo seleccionado, vuelve a mostrar la imagen actual de la base de datos
+                if (linkElement) {
+                    previewImage.src = linkElement.href;
+                } else {
+                    previewImage.style.display = "none"; // Oculta la previsualización si no hay imagen
+                }
+            }
+        });
+    }
+});
+
+
+document.addEventListener("DOMContentLoaded", function () {
+    const fileInput = document.querySelector('input[type="file"][name="form-0-logo"]'); // Selector del input
+    const linkElement = document.querySelector('.file-upload a'); // Selector del enlace actual
+    let currentPreview = document.querySelector('.file-upload img'); // Selector de la imagen inicial
+
+    // Escuchar cambios en el input de archivo
+    if (fileInput) {
+        fileInput.addEventListener("change", function (event) {
+            const file = event.target.files[0];
+
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    // Reemplaza la fuente de la imagen actual con la nueva previsualización
+                    currentPreview.src = e.target.result;
+                    currentPreview.style.display = "block"; // Asegurarse de que esté visible
+                };
+                reader.readAsDataURL(file);
+            } else {
+                // Si no hay archivo seleccionado, vuelve a mostrar la imagen actual de la base de datos
+                if (linkElement) {
+                    currentPreview.src = linkElement.href; // Volver al enlace original
+                } else {
+                    currentPreview.style.display = "none"; // Oculta la previsualización si no hay imagen
+                }
+            }
+        });
+    }
+});
+
+
+
+
+/*Dando color al boton SUBIR archivo en el admin*/
+// Referencia al input
+const fileInput = document.getElementById('id_form-0-logo');
+
+// Crear un botón personalizado
+const customButton = document.createElement('button');
+customButton.id = 'customFileButton';
+customButton.textContent = 'Seleccionar archivo';
+
+// Insertar el botón antes del input
+fileInput.parentNode.insertBefore(customButton, fileInput);
+
+// Mostrar el nombre del archivo
+const fileNameDisplay = document.createElement('div');
+fileNameDisplay.id = 'fileNameDisplay';
+fileNameDisplay.textContent = 'Ningún archivo seleccionado';
+fileInput.parentNode.insertBefore(fileNameDisplay, fileInput.nextSibling);
+
+// Manejar el clic en el botón para abrir el cuadro de diálogo de selección de archivos
+customButton.addEventListener('click', (e) => {
+  e.preventDefault(); // Evita recargar la página si el botón es un botón normal
+  fileInput.click();
+});
+
+// Actualizar el texto al seleccionar un archivo
+fileInput.addEventListener('change', () => {
+  const fileName = fileInput.files.length ? fileInput.files[0].name : 'Ningún archivo seleccionado';
+  fileNameDisplay.textContent = fileName;
+});
+
+

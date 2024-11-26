@@ -326,3 +326,174 @@ img {
 .brand-text.font-weight-light{
     background-color: var(--primary-color);
 }
+
+.main-footer .float-right.d-none.d-sm-inline {
+    display: none;
+    color: var(--background-color);
+    user-select: none;
+}
+#recent-actions-module a[href*="/admin/sitioWeb/usuario/"] {
+    color: var(--primary-color);
+    /*font-size: 1.5rem;*/
+}
+.brand-link.navbar-warning{
+    background-color: var(--primary-color);
+}
+
+
+
+
+a[href="/admin/password_change/"] {
+    display: none;
+}
+
+
+
+
+
+
+
+
+
+
+
+nav#jazzy-navbar .nav-item.dropdown > a.nav-link > i.far.fa-user {
+    display: none;
+}
+
+nav#jazzy-navbar .nav-item.dropdown > a.nav-link::before {
+    content: "";
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+    background-image: url('/static/cerrar-sesion.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    margin-right: 5px;
+}
+
+
+/* Selecciona específicamente el ícono en el botón de cerrar sesión */
+nav#jazzy-navbar form#logout-form .dropdown-item > i.fas.fa-users {
+    display: none; /* Oculta el ícono actual */
+}
+
+/* Añade un nuevo ícono personalizado antes del texto del botón */
+nav#jazzy-navbar form#logout-form .dropdown-item::before {
+    content: ""; /* Necesario para añadir un ícono */
+    display: inline-block;
+    width: 20px; /* Ajusta el tamaño del ícono */
+    height: 20px;
+    background-image: url('/static/opcionCerrar.png'); /* Ruta a tu ícono personalizado */
+    background-size: contain; /* Asegura que el ícono se ajuste bien */
+    background-repeat: no-repeat; /* Evita repeticiones */
+    margin-right: 5px; /* Espacio entre el ícono y el texto */
+}
+
+
+img {
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 5px;
+    max-width: 100%;
+    max-height: 100px;
+}
+
+
+/*
+th.field-nombre a::after {
+    content: "Detalles";
+    color: inherit;
+    font-weight: normal;
+}
+
+th.field-nombre a {
+    visibility: hidden;
+    position: relative;
+}
+
+th.field-nombre a::after {
+    visibility: visible;
+    position: absolute;
+    left: 0;
+}*/
+/* Estilo específico para la tabla del administrador de logos */
+#result_list th.field-nombre a[href*="/admin/sitioWeb/configuracionlogo/"]::after {
+    content: "Detalles";
+    display: inline-block;
+    padding: 5px 10px;
+    background-color: var(--primary-color); /* Color del botón */
+    color: white;
+    font-size: 15px;
+    border-radius: 5px;
+    text-align: center;
+    text-decoration: none;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+#result_list th.field-nombre a[href*="/admin/sitioWeb/configuracionlogo/"] {
+    visibility: hidden;
+    position: relative;
+}
+
+#result_list th.field-nombre a[href*="/admin/sitioWeb/configuracionlogo/"]::after {
+    visibility: visible;
+    position: absolute;
+    left: 0;
+}
+
+#result_list th.field-nombre a[href*="/admin/sitioWeb/configuracionlogo/"]:hover::after {
+    background-color: var(--accent-hover); /* Color al pasar el cursor */
+}
+
+
+/*Dando color al boton SUBIR archivo en el admin*/
+/* Oculta el input original, pero sigue siendo funcional */
+#id_form-0-logo {
+    opacity: 0; /* Lo hace invisible */
+    position: absolute; /* Lo posiciona fuera de la vista */
+    z-index: -1; /* Lo coloca detrás de otros elementos */
+  }
+  
+  /* Botón personalizado */
+  #customFileButton {
+    display: inline-block;
+    padding: 5px 5px;
+    font-size: 16px;
+    font-weight: bold;
+    color: #ffffff;
+    background: var(--primary-color);
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: center;
+    transition: background 0.3s, transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Hover efecto */
+  #customFileButton:hover {
+    background: var(--secondary-color);
+    transform: scale(1.02);
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+  }
+  
+  /* Mostrar el nombre del archivo */
+  #fileNameDisplay {
+    margin-top: 10px;
+    font-size: 14px;
+    color: #333;
+    font-style: italic;
+  }
+  
+  /*Dando color al boton SUBIR archivo en DETALLES en el admin*/
+  #id_logo{
+    padding: 5px;
+    background: var(--primary-color);
+    border-radius: 10px;
+    color: var(--background-color);
+  }
+  #id_logo:hover{
+    background-color: var(--secondary-color);
+  }

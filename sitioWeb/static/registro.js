@@ -43,7 +43,7 @@ function validatePhone(input) {
 }
 
 // Función de validación para la contraseña
-function validatePassword(input) {
+/*function validatePassword(input) {
     if (input.value.trim() === "") {
         input.setCustomValidity("Ingresa una contraseña.");
     } else if (input.value.length < 5) {
@@ -52,6 +52,37 @@ function validatePassword(input) {
         input.setCustomValidity(""); // Remueve el mensaje de error si es válido
     }
 }
+*/
+function validatePassword(input) {
+    const username = document.querySelector('input[name="username"]').value.trim();
+    const password = input.value;
+
+    const hasUpperCase = /[A-Z]/.test(password); // Verifica si hay al menos una mayúscula
+    const hasLowerCase = /[a-z]/.test(password); // Verifica si hay al menos una minúscula
+    const hasNumber = /\d/.test(password); // Verifica si hay al menos un número
+    const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password); // Verifica caracteres especiales
+    const containsUsername = username && password.includes(username); // Verifica si incluye el nombre de usuario
+
+    if (password.trim() === "") {
+        input.setCustomValidity("Ingresa una contraseña.");
+    } else if (password.length < 8) {
+        input.setCustomValidity("La contraseña debe tener al menos 8 caracteres.");
+    } else if (!hasUpperCase) {
+        input.setCustomValidity("La contraseña debe incluir al menos una letra mayúscula.");
+    } else if (!hasLowerCase) {
+        input.setCustomValidity("La contraseña debe incluir al menos una letra minúscula.");
+    } else if (!hasNumber) {
+        input.setCustomValidity("La contraseña debe incluir al menos un número.");
+    } else if (!hasSpecialChar) {
+        input.setCustomValidity("La contraseña debe incluir al menos un carácter especial.");
+    } else if (containsUsername) {
+        input.setCustomValidity("La contraseña no debe contener el nombre de usuario.");
+    } else {
+        input.setCustomValidity(""); // Contraseña válida
+    }
+}
+
+
 
 // Función de validación para la confirmación de contraseña
 function validateConfirmPassword(input, passwordField) {

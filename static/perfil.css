@@ -531,8 +531,8 @@ label {
     }
 
     .profile-photo img {
-        width: 12.25rem; /* Reducir el tamaño de la imagen de perfil */
-        height: 12.25rem;
+        width: 10.25rem; /* Reducir el tamaño de la imagen de perfil */
+        height: 10.25rem;
     }
 
     /* Ajustar el tamaño de los botones */
@@ -546,12 +546,21 @@ label {
         display: flex;
         flex-direction: row;
         justify-content: space-between;
-        padding-top: 20px ;
+        padding-top: 20px;
+        padding-left: auto;
         margin-top: 1rem;
+        margin-left: 0px;
+        font-size: 13px;
     }
-
+    #previewed{
+        width: 40px;
+        height: 40px;
+    }
     .lista-perfil li {
-        margin: 0 0.5rem; /* Margen reducido para enlaces */
+        margin:  0px; /* Margen reducido para enlaces */
+    }
+    .lista-perfil li a{
+        margin:  0px; /* Margen reducido para enlaces */
     }
 
     .materials-grid {
