@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Funcionalidad del botón
     button.addEventListener('click', function () {
-        window.location.href = 'http://127.0.0.1:8000/'; // Redirige a la página principal
+        window.location.href = 'https://devsupweb.pythonanywhere.com/'; // Redirige a la página principal
          //'https://devsupweb.pythonanywhere.com/'
     });
 

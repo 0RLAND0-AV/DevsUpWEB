@@ -24,7 +24,7 @@
 }
 
 h1 {
-    color: #02735E;
+    color: var(--primary-color);
     margin-bottom: 10px;
 }
 
