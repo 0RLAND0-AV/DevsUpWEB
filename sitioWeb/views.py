@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import path
 from django.contrib import admin
-from .models import Usuario , Producto ,Categoria,CarritoProducto , Departamento,Provincia,subCategoria,EstadoDelProducto,Imagenes,ConfiguracionLogo
+from .models import Usuario , Producto ,Categoria,CarritoProducto , Departamento,Provincia,subCategoria,EstadoDelProducto,Imagenes,ConfiguracionLogo,ComisionAdmin
 from django.http import HttpResponse ,JsonResponse,HttpResponseRedirect
 from django.contrib.auth import authenticate, login ,logout , authenticate
 from django.contrib import messages
@@ -144,14 +144,11 @@ def transaccion_view(request):
                 usuario.billetera -= total_con_comision
                 usuario.save()
 
-                # Obtiene o crea al usuario 'ADMIN' y le asigna la comisión
-                admin_user, created = Usuario.objects.get_or_create(
-                    nombre='ADMIN',
-                    correo='ADMIN@gmail.com',
-                    defaults={'billetera': Decimal(0)}
-                )
-                admin_user.billetera += comision
-                admin_user.save()
+                
+                # Actualiza la tabla ComisionAdmin con la comisión
+                comision_admin, created = ComisionAdmin.objects.get_or_create(id=1)
+                comision_admin.monto_acumulado += comision
+                comision_admin.save()
 
                 # Vacía el carrito
                 productos_en_carrito.delete()

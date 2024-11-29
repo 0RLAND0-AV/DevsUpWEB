@@ -253,6 +253,14 @@ label {
     cursor: pointer;
     margin-top: 10px;
 }
+
+#email{
+    padding: 10px;
+    border: 1px solid #ccc;
+    font-size: 12px; /* Inicialmente, el tamaño más grande */
+    transition: font-size 0.3s ease; /* Animación suave cuando cambia el tamaño de la fuente */
+
+}
 /*---------modal nombre*/
 .modal {
     display: none; /* Oculto por defecto */
@@ -276,12 +284,18 @@ label {
 }
 #input-editar-nombre{
     background-color:var(--secondary-color);
+    font-size: 15px;
 }
 #input-editar-correo{
     background-color:var(--secondary-color);
+    padding: 10px;
+    border: 1px solid #ccc;
+    font-size: 15px; /* Inicialmente, el tamaño más grande */
+    transition: font-size 0.3s ease; /* Animación suave cuando cambia el tamaño de la fuente */
 }
 #input-editar-celular{
     background-color:var(--secondary-color);
+    font-size: 15px;
 }
 
 .modal-content h3,h2{
@@ -300,6 +314,10 @@ label {
     cursor: pointer;
     background-color: var(--tertiary-color);
     color: var(--white);
+}
+.modal-buttons button:hover{
+    background-color: var(--secondary-color);
+
 }
 
 .modal-buttons button#cancelar-nombre {
@@ -339,8 +357,13 @@ label {
     border-radius: 4px;
     cursor: pointer;
 }
+.save:hover{
+    background-color: var(--secondary-color);
+}
 #modal-final button{
-    margin-left: 5rem;
+    margin-left: 3rem;
+    margin-right: 3rem;
+    justify-content:center;
 }
 
 

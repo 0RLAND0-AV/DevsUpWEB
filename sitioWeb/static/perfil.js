@@ -86,9 +86,52 @@ function esCorreoValido(correo) {
     const regex = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
     return regex.test(correo);
 }
+
+// Función para ajustar el tamaño de la fuente en un input
+// Función para ajustar el tamaño de la fuente de un input
+function ajustarTamañoFuente(input) {
+    const longitudTexto = input.value.length;
+
+    // Establecer un tamaño máximo y mínimo de fuente
+    const tamañoFuenteMax = 20; // Tamaño máximo de la fuente
+    const tamañoFuenteMin = 10; // Tamaño mínimo de la fuente
+
+    // Ajustar el tamaño de la fuente de acuerdo con la longitud del texto
+    let nuevoTamañoFuente = tamañoFuenteMax - (longitudTexto / 3); // Calculamos el tamaño en función de la longitud
+
+    // Asegurarse de que el tamaño de la fuente no sea menor que el mínimo
+    if (nuevoTamañoFuente < tamañoFuenteMin) {
+        nuevoTamañoFuente = tamañoFuenteMin;
+    }
+
+    // Establecer el nuevo tamaño de fuente
+    input.style.fontSize = `${nuevoTamañoFuente}px`;
+
+    // Retornar el tamaño ajustado para usarlo en otro input si es necesario
+    return nuevoTamañoFuente;
+}
+
+// Aplicar ajuste de tamaño al escribir en el input de correo
+document.getElementById('input-editar-correo').addEventListener('input', function(event) {
+    ajustarTamañoFuente(event.target); // Ajusta el tamaño de la fuente en el input de edición
+});
+
+// Mostrar el modal de edición de correo
 document.getElementById('editar-correo').addEventListener('click', function() {
-    valorOriginalCorreo = document.getElementById('email').value;
-    document.getElementById('input-editar-correo').value = valorOriginalCorreo;
+    const inputEmail = document.getElementById('email');
+    const inputCorreo = document.getElementById('input-editar-correo');
+
+    // Copiar el valor y estilo de fuente del input principal al de edición
+    inputCorreo.value = inputEmail.value;
+
+    // Copiar todas las propiedades de estilo del input "email" al input "input-editar-correo"
+    inputCorreo.style.fontSize = inputEmail.style.fontSize;
+    inputCorreo.style.lineHeight = inputEmail.style.lineHeight;
+    inputCorreo.style.padding = inputEmail.style.padding;
+
+    // Aplicar el ajuste de tamaño también en el input "email" para que refleje el cambio
+    ajustarTamañoFuente(inputEmail); // Este paso asegura que el tamaño de fuente en #email se ajuste al escribir
+
     document.getElementById('modal-editar-correo').style.display = 'flex';
 });
 
@@ -99,9 +142,22 @@ document.getElementById('cancelar-correo').addEventListener('click', function() 
 
 // Guardar correo
 document.getElementById('guardar-correo').addEventListener('click', function() {
-    const nuevoCorreo = document.getElementById('input-editar-correo').value;
+    const inputCorreo = document.getElementById('input-editar-correo');
+    const inputEmail = document.getElementById('email');
+    const nuevoCorreo = inputCorreo.value;
+
     if (esCorreoValido(nuevoCorreo)) {
-        document.getElementById('email').value = nuevoCorreo;
+        // Actualizar el valor del input "email"
+        inputEmail.value = nuevoCorreo;
+
+        // Asegurarse de que el tamaño de fuente, line-height y padding se copien correctamente
+        inputEmail.style.fontSize = inputCorreo.style.fontSize;
+        inputEmail.style.lineHeight = inputCorreo.style.lineHeight;
+        inputEmail.style.padding = inputCorreo.style.padding;
+
+        // Aplicar ajuste de tamaño también en el input "email" para que refleje el cambio
+        ajustarTamañoFuente(inputEmail); // Este paso ajusta el tamaño de fuente en #email según el texto guardado
+
         document.getElementById('modal-editar-correo').style.display = 'none';
         document.getElementById('modal-final').style.display = 'flex';
     } else {
@@ -151,7 +207,23 @@ document.getElementById('guardar-celular').addEventListener('click', function() 
 });
 //-----------fin modal
 
+document.getElementById('input-editar-nombre').addEventListener('keydown', function(event) {
+    if (event.key === 'Enter') {
+        document.getElementById('guardar-nombre').click();
+    }
+});
 
+document.getElementById('input-editar-correo').addEventListener('keydown', function(event) {
+    if (event.key === 'Enter') {
+        document.getElementById('guardar-correo').click();
+    }
+});
+
+document.getElementById('input-editar-celular').addEventListener('keydown', function(event) {
+    if (event.key === 'Enter') {
+        document.getElementById('guardar-celular').click();
+    }
+});
 
 //------------------------------------------------------------------------BILLETERA----------------------------------------------------------------------
 // Función para mostrar y ocultar el saldo

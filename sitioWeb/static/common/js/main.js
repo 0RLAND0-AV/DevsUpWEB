@@ -1,3 +1,44 @@
+
+document.addEventListener('DOMContentLoaded', function () {
+    // Crear el botón
+    const button = document.createElement('button');
+    button.innerHTML = '&#x21E6; Inicio'; // Flecha hacia la izquierda (Unicode) + texto
+
+    // Estilos del botón
+    button.style.position = 'absolute';
+    button.style.top = '10px';
+    button.style.left = '10px';
+    button.style.padding = '8px 18px'; // Ajustado el tamaño del botón
+    button.style.backgroundColor = 'var(--secondary-color)'; // Fondo verde medio
+    button.style.color = 'var(--white)'; // Texto blanco
+    button.style.border = '2px solid var(--white)'; // Borde blanco para resaltar
+    button.style.borderRadius = '5px';
+    button.style.cursor = 'pointer';
+    button.style.zIndex = '1000';
+    button.style.fontSize = '16px'; // Tamaño de fuente adecuado
+    button.style.transition = 'background-color 0.3s, transform 0.3s'; // Transición suave en el hover
+
+    // Hover para el botón
+    button.addEventListener('mouseover', function() {
+        button.style.backgroundColor = 'var(--secondary-color)'; // Cambio de color al pasar el mouse
+        button.style.transform = 'scale(1.1)'; // Efecto de agrandamiento
+    });
+
+    button.addEventListener('mouseout', function() {
+        button.style.backgroundColor = 'var(--secondary-color)'; // Vuelve al color original
+        button.style.transform = 'scale(1)'; // Vuelve al tamaño original
+    });
+
+    // Funcionalidad del botón
+    button.addEventListener('click', function () {
+        window.location.href = 'http://127.0.0.1:8000/'; // Redirige a la página principal
+         //'https://devsupweb.pythonanywhere.com/'
+    });
+
+    // Añadir el botón al DOM
+    document.body.appendChild(button);
+});
+
 document.addEventListener('DOMContentLoaded', function() {
     var checkbox = document.getElementById('id_estadoUsuario');  // Obtén el checkbox por su id
 
@@ -41,7 +82,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         // Redirigir a la página de lista de usuarios
-        window.location.href = '/admin/sitioWeb/usuario/';  // Redirige a la lista de usuarios
+        window.history.back();  // Regresa a la página anterior en el historial del navegador
     });
 });
 

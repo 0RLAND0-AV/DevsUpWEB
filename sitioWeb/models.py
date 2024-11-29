@@ -162,3 +162,23 @@ class PersonalizarColores(models.Model):
     
     def __str__(self):
         return f"Personalización de colores para usuario {self.usuario}" if self.usuario else "Personalización de colores"
+    
+
+
+class ComisionAdmin(models.Model):
+    monto_acumulado = models.DecimalField(
+        max_digits=10, 
+        decimal_places=2, 
+        default=0,
+        null=False, 
+        blank=False
+    )  # Cantidad total acumulada de comisiones
+    fecha_actualizacion = models.DateTimeField(auto_now=True)  # Fecha de la última actualización
+
+    class Meta:
+        db_table = "ComisionAdmin"
+        verbose_name = "Comisión "
+        verbose_name_plural = "Comision "
+
+    def __str__(self):
+        return f"Monto acumulado: {self.monto_acumulado}"

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Usuario ,Categoria, subCategoria , Producto , Imagenes ,Departamento,Provincia,EstadoDelProducto,CarritoProducto,ConfiguracionLogo
+from .models import Usuario ,Categoria, subCategoria , Producto , Imagenes ,Departamento,Provincia,EstadoDelProducto,CarritoProducto,ConfiguracionLogo,ComisionAdmin
 
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import User
@@ -18,6 +18,22 @@ class UserAdmin(admin.ModelAdmin):
     def has_add_permission(self, request):
         return False
 admin.site.register(Usuario,UserAdmin)#forma para registrar 1
+
+
+@admin.register(ComisionAdmin)
+class ComisionAdminAdmin(admin.ModelAdmin):
+    list_display = ('id', 'monto_acumulado', 'fecha_actualizacion')  # Campos a mostrar en la lista del admin
+    readonly_fields = ('fecha_actualizacion',)  # Este campo no es editable
+    list_editable = ('monto_acumulado',)  # Permite editar el monto acumulado directamente en la lista
+
+    def has_add_permission(self, request):
+        """
+        Restringe la posibilidad de agregar múltiples registros.
+        Solo debe haber un único registro de ComisionAdmin.
+        """
+        if ComisionAdmin.objects.exists():
+            return False
+        return True
 
 
 @admin.register(ConfiguracionLogo)

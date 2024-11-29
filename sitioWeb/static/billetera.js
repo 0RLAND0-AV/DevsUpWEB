@@ -12,6 +12,7 @@ function validarInputPositivo(inputId) {
     document.getElementById(inputId).addEventListener('input', function (e) {
         let value = e.target.value;
 
+
         // Si el valor es negativo, lo corrige a vacío o a 0
         if (value < 0) {
             e.target.value = Math.abs(value); // Convierte a positivo
@@ -23,6 +24,10 @@ function validarInputPositivo(inputId) {
             if (decimal.length > 2) {
                 e.target.value = integer + '.' + decimal.slice(0, 2);
             }
+        }
+        let numericValue = parseFloat(value);
+        if (numericValue > 9999.99) {
+            e.target.value = value.slice(0, -1); // Borra el último carácter ingresado
         }
     });
 }

@@ -384,11 +384,24 @@ nav#jazzy-navbar form#logout-form .dropdown-item::before {
     display: inline-block;
     width: 20px; /* Ajusta el tamaño del ícono */
     height: 20px;
-    background-image: url('/static/opcionCerrar.png'); /* Ruta a tu ícono personalizado */
+    background-image: url('/static/opcion-de-cerrar-sesionBlanco.png'); /* Ruta a tu ícono personalizado */
     background-size: contain; /* Asegura que el ícono se ajuste bien */
     background-repeat: no-repeat; /* Evita repeticiones */
     margin-right: 5px; /* Espacio entre el ícono y el texto */
 }
+
+
+
+nav#jazzy-navbar form#logout-form .dropdown-item:hover::before {
+    background-image: url('/static/opcionCerrar.png'); /* Ruta a la imagen de hover */
+}
+
+/*color de cerrar secion a blanco*/
+.dropdown-item{
+    color: #bdeeee;
+}
+
+
 
 
 img {
@@ -417,6 +430,25 @@ th.field-nombre a::after {
     position: absolute;
     left: 0;
 }*/
+.alert.alert-danger {
+    position: relative;
+    visibility: hidden; /* Oculta el mensaje original */
+  }
+  
+  .alert.alert-danger::after {
+    content: "Por favor, corrige el error a continuación."; /* Mensaje en español */
+    visibility: visible; /* Asegura que el nuevo contenido sea visible */
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%; /* Ocupa el ancho completo del contenedor */
+    background-color: #ffccbc; /* Color de fondo original */
+    color: #c62828; /* Color del texto original */
+    padding: 10px; /* Espaciado interno */
+    border: 1px solid #ff8a65; /* Borde original */
+    border-radius: 4px; /* Mantiene esquinas redondeadas */
+    box-sizing: border-box; /* Asegura que el estilo no afecte el diseño */
+  }
 /* Estilo específico para la tabla del administrador de logos */
 #result_list th.field-nombre a[href*="/admin/sitioWeb/configuracionlogo/"]::after {
     content: "Detalles";
@@ -446,6 +478,22 @@ th.field-nombre a::after {
 #result_list th.field-nombre a[href*="/admin/sitioWeb/configuracionlogo/"]:hover::after {
     background-color: var(--accent-hover); /* Color al pasar el cursor */
 }
+
+h3.timeline-header.no-border a[href="/admin/sitioWeb/configuracionlogo/1/change/"] {
+    color: var(--primary-color) !important; 
+    text-decoration: none !important; 
+}
+
+h3.timeline-header.no-border a[href="/admin/auth/user/2/change/"] {
+    color: var(--primary-color) !important;
+    text-decoration: none !important;
+}
+
+h3.timeline-header.no-border a[href="/admin/sitioWeb/producto/32/change/"] {
+    color: var(--primary-color) !important; 
+    text-decoration: none !important; 
+}
+
 
 
 /*Dando color al boton SUBIR archivo en el admin*/
@@ -496,4 +544,8 @@ th.field-nombre a::after {
   }
   #id_logo:hover{
     background-color: var(--secondary-color);
+  }
+/*quitando el boton de cancelar en comision del admin*/
+  form#comisionadmin_form .btn-cancel {
+    display: none;
   }
